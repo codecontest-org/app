@@ -62,6 +62,10 @@ const ParentDashboard = ({ user, accounts, location }) => {
   const useSelectedCls = () => [selectedCls, setSelectedCls];
   useEffect(() => setSelectedCls(null), [whoAmI]);
 
+  const [currentPage, setCurrentPage] = useState('');
+  const useCurrentPage = () => [currentPage, setCurrentPage];
+  useEffect(() => setCurrentPage(''), [selectedCls]);
+
   const getID = () => {
     const path = location.pathname;
     if (path.includes('/parent/signup/') && path.length > 18) {
@@ -76,17 +80,33 @@ const ParentDashboard = ({ user, accounts, location }) => {
     const cleanPath = id ? pathname.replace(`/${id}`, '') : pathname;
     let Interface = routeToInterface[cleanPath];
     if (whoAmIRoutes.includes(cleanPath) && whoAmI === null) Interface = WhoAmInterface;
-    return Interface === null ? null : (
-      <Interface {...{ accounts, user, useCustomAppBar, useSelectedCls, whoAmI, setWhoAmI }} />
-    );
+    const interfaceProps = {
+      accounts,
+      user,
+      useCustomAppBar,
+      useSelectedCls,
+      useCurrentPage,
+      whoAmI,
+      setWhoAmI
+    };
+    return Interface === null ? null : <Interface {...interfaceProps} />;
   };
 
-  const getMainDash = () =>
-    selectedCls !== null ? (
-      <ContestInterface />
+  const getMainDash = () => {
+    const mainProps = {
+      whoAmI,
+      setWhoAmI,
+      useCustomAppBar,
+      useSelectedCls,
+      useCurrentPage,
+      accounts
+    };
+    return selectedCls !== null ? (
+      <ContestInterface {...mainProps} />
     ) : (
-      <ClassViewInterface {...{ whoAmI, setWhoAmI, useCustomAppBar, useSelectedCls, accounts }} />
+      <ClassViewInterface {...mainProps} />
     );
+  };
 
   let approvedRoutes = isTeacher ? ['Teacher Dash'] : [];
   approvedRoutes = isAdmin ? approvedRoutes.concat(['Admin Dash']) : approvedRoutes;
