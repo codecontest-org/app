@@ -31,6 +31,7 @@ import {
 
 const propTypes = {
   useCustomAppBar: PropTypes.func.isRequired,
+  useCurrentPage: PropTypes.func.isRequired,
   width: PropTypes.string.isRequired,
   pages: PropTypes.object.isRequired,
   useSelectedCls: PropTypes.func,
@@ -73,6 +74,7 @@ const MarkdownPages = ({
   whiteList,
   useCustomAppBar,
   useSelectedCls,
+  useCurrentPage,
   whoAmI,
   setWhoAmI,
   firstPrev,
@@ -82,6 +84,7 @@ const MarkdownPages = ({
   includes
 }) => {
   const [selectedCls] = useSelectedCls();
+  const [saveCurrentPage] = useCurrentPage().slice(1);
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -149,7 +152,10 @@ const MarkdownPages = ({
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const newPage = params.get('page');
-    if (newPage) setPage(newPage);
+    if (newPage) {
+      setPage(newPage);
+      saveCurrentPage(newPage);
+    }
   }, [location.search]);
 
   // Subscribe to child updates.
