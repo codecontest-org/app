@@ -16,6 +16,13 @@ const ContestTutorials = ({ page }) => {
     () => (page !== '' ? `/parent/tutorials?page=${page}` : '/parent/tutorials'),
     [page]
   );
+
+  /**
+   * TODO: Use the tutorial selection for the first
+   * half of the page info...
+   * ALSO: It might be cool to use local storage here
+   * to create some kind of local persistence?
+   */
   const pageInfo = useMemo(() => {
     if (page !== '') {
       const parts = page.split('.');
@@ -24,6 +31,7 @@ const ContestTutorials = ({ page }) => {
     }
     return ['N/A', 'Welcome to CodeContest'];
   }, [page]);
+
   const history = useHistory();
   const classes = useStyles();
   return (
