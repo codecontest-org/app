@@ -8,6 +8,7 @@ import SideBar from '../UI/SideBar';
 import ClassInfoInterface from '../Interfaces/ClassInfo';
 import ClassSearchInterface from '../Interfaces/ClassSearch';
 import ClassViewInterface from '../Interfaces/ClassView';
+import ContestInterface from '../Interfaces/Contest';
 import SettingsInterface from '../Interfaces/Settings';
 import DocumentationInterface from '../Interfaces/Documentation';
 import TutorialsInterface from '../Interfaces/Tutorials';
@@ -80,6 +81,13 @@ const ParentDashboard = ({ user, accounts, location }) => {
     );
   };
 
+  const getMainDash = () =>
+    selectedCls !== null ? (
+      <ContestInterface />
+    ) : (
+      <ClassViewInterface {...{ whoAmI, setWhoAmI, useCustomAppBar, useSelectedCls, accounts }} />
+    );
+
   let approvedRoutes = isTeacher ? ['Teacher Dash'] : [];
   approvedRoutes = isAdmin ? approvedRoutes.concat(['Admin Dash']) : approvedRoutes;
 
@@ -95,13 +103,7 @@ const ParentDashboard = ({ user, accounts, location }) => {
         enableIntercom
       />
       <StripeProvider apiKey={STRIPE_KEY}>
-        <Elements>
-          {getInterface() || (
-            <ClassViewInterface
-              {...{ whoAmI, setWhoAmI, useCustomAppBar, useSelectedCls, accounts }}
-            />
-          )}
-        </Elements>
+        <Elements>{getInterface() || getMainDash()}</Elements>
       </StripeProvider>
     </PageWrapper>
   ) : (

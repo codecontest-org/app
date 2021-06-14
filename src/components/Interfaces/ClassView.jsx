@@ -143,7 +143,7 @@ const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar, useSele
                 color="primary"
                 onClick={() => {
                   setSelectedCls(cls);
-                  history.push('/parent/tutorials');
+                  // history.push('/parent/tutorials');
                 }}
               >
                 {timePrompt(cls)}
