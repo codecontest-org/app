@@ -16,6 +16,14 @@ const ContestTutorials = ({ page }) => {
     () => (page !== '' ? `/parent/tutorials?page=${page}` : '/parent/tutorials'),
     [page]
   );
+  const pageInfo = useMemo(() => {
+    if (page !== '') {
+      const parts = page.split('.');
+      if (parts.length > 1) return parts;
+      return ['N/A', page];
+    }
+    return ['N/A', 'Welcome to CodeContest'];
+  }, [page]);
   const history = useHistory();
   const classes = useStyles();
   return (
@@ -25,7 +33,7 @@ const ContestTutorials = ({ page }) => {
       </Typography>
       <div className={classes.row}>
         <Typography variant="body1">
-          <strong>Game Type:</strong> Zombie
+          <strong>Turtorial:</strong> {pageInfo[0]}
         </Typography>
         <Typography variant="body1">
           <strong>Checkoffs:</strong> 2 / 9
@@ -33,7 +41,7 @@ const ContestTutorials = ({ page }) => {
       </div>
       <div className={classes.row}>
         <Typography variant="body1">
-          <strong>Current Tutorial:</strong> Zombie Game 3B
+          <strong>Current Step:</strong> {pageInfo[1]}
         </Typography>
         <Button variant="contained" color="primary" onClick={() => history.push(pageUrl)}>
           Open Tutorials
