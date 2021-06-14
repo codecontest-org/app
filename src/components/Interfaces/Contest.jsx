@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Container, Grid, Typography, makeStyles } from '@material-ui/core';
 import ContestTutorials from '../Contest/Tutorials';
 
@@ -15,7 +16,12 @@ import ContestTutorials from '../Contest/Tutorials';
  *  - Notes?
  */
 
-const ContestInterface = () => {
+const propTypes = {
+  useCurrentPage: PropTypes.func.isRequired
+};
+
+const ContestInterface = ({ useCurrentPage }) => {
+  const [page] = useCurrentPage();
   const classes = useStyles();
   return (
     <Container maxWidth="xl" className={classes.wrapper}>
@@ -24,12 +30,13 @@ const ContestInterface = () => {
       </Typography>
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={12} md={5}>
-          <ContestTutorials />
+          <ContestTutorials page={page} />
         </Grid>
       </Grid>
     </Container>
   );
 };
+ContestInterface.propTypes = propTypes;
 
 const useStyles = makeStyles({
   wrapper: {

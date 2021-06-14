@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
-const ContestTutorials = () => {
+const propTypes = {
+  page: PropTypes.string
+};
+
+const defaultProps = {
+  page: ''
+};
+
+const ContestTutorials = ({ page }) => {
+  const pageUrl = useMemo(
+    () => (page !== '' ? `/parent/tutorials?page=${page}` : '/parent/tutorials'),
+    [page]
+  );
+  const history = useHistory();
   const classes = useStyles();
   return (
     <Paper className={classes.paper}>
@@ -20,13 +35,15 @@ const ContestTutorials = () => {
         <Typography variant="body1">
           <strong>Current Tutorial:</strong> Zombie Game 3B
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={() => history.push(pageUrl)}>
           Open Tutorials
         </Button>
       </div>
     </Paper>
   );
 };
+ContestTutorials.propTypes = propTypes;
+ContestTutorials.defaultProps = defaultProps;
 
 const useStyles = makeStyles({
   paper: {
