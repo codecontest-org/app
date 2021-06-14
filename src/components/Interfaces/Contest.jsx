@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Typography, makeStyles } from '@material-ui/core';
+import { Container, Grid, Typography, makeStyles } from '@material-ui/core';
+import ContestTutorials from '../Contest/Tutorials';
 
 /**
  * -- Contest Interface --
@@ -17,17 +18,25 @@ import { Container, Typography, makeStyles } from '@material-ui/core';
 const ContestInterface = () => {
   const classes = useStyles();
   return (
-    <Container className={classes.container}>
+    <Container maxWidth="xl" className={classes.wrapper}>
       <Typography variant="h2" align="center">
         Code Contest Dashboard
       </Typography>
+      <Grid container spacing={3} className={classes.grid}>
+        <Grid item xs={12} md={5}>
+          <ContestTutorials />
+        </Grid>
+      </Grid>
     </Container>
   );
 };
 
 const useStyles = makeStyles({
-  container: {
-    paddingTop: 20
+  wrapper: {
+    paddingTop: 30
+  },
+  grid: {
+    paddingTop: 50
   }
 });
 
