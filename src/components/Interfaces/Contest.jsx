@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Grid, Typography, makeStyles } from '@material-ui/core';
 import ContestTutorials from '../Contest/Tutorials';
+import ContestTeam from '../Contest/Team';
 
 /**
  * -- Contest Interface --
@@ -37,8 +38,11 @@ const ContestInterface = ({ useCurrentPage, useSelectedCls, whoAmI }) => {
         Code Contest Dashboard
       </Typography>
       <Grid container spacing={3} className={classes.grid}>
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={4}>
           <ContestTutorials whoAmI={whoAmI} cls={cls} page={page} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ContestTeam />
         </Grid>
       </Grid>
     </Container>
