@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { getLiveTutorialSelection } from '../../hooks/pages';
+import { getLiveTutorialSelection, getFilteredLiveCheckOffsData } from '../../hooks/pages';
 import { gameTypes } from '../../utils/globals';
 
 const propTypes = {
@@ -19,27 +19,37 @@ const defaultProps = {
 
 const ContestTutorials = ({ whoAmI, cls, page }) => {
   const selection = getLiveTutorialSelection(whoAmI?.id, cls?.id);
+  const checkOffs = getFilteredLiveCheckOffsData(a =>
+    a
+      .where('childId', '==', whoAmI?.id)
+      .where('classId', '==', cls?.id)
+      .where('approved', '==', true)
+  );
+
+  const coCount = useMemo(
+    () => checkOffs.filter(co => co.page.includes(gameTypes[selection?.type])).length,
+    [checkOffs, selection]
+  );
 
   const pageUrl = useMemo(
     () => (page !== '' ? `/parent/tutorials?page=${page}` : '/parent/tutorials'),
     [page]
   );
 
-  const toTitle = s => {
-    const name = gameTypes[s?.type];
+  const typeTitle = useMemo(() => {
+    const name = gameTypes[selection?.type];
     if (name) return name.concat(' Tutorial');
     return 'N/A';
-  };
+  }, [selection]);
 
   const pageInfo = useMemo(() => {
-    const auto = toTitle(selection);
     if (page !== '') {
       const parts = page.split('.');
       if (parts.length > 1) return parts;
-      return [auto, page];
+      return [typeTitle, page];
     }
-    return [auto, 'Welcome to CodeContest'];
-  }, [page, selection]);
+    return [typeTitle, 'Welcome to CodeContest'];
+  }, [page, typeTitle]);
 
   const history = useHistory();
   const classes = useStyles();
@@ -53,7 +63,7 @@ const ContestTutorials = ({ whoAmI, cls, page }) => {
           <strong>Turtorial:</strong> {pageInfo[0]}
         </Typography>
         <Typography variant="body1">
-          <strong>Checkoffs:</strong> 2 / 9
+          <strong>Checkoffs:</strong> {coCount} / 9
         </Typography>
       </div>
       <div className={classes.row}>
