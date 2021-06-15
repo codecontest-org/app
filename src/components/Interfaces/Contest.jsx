@@ -42,7 +42,7 @@ const ContestInterface = ({ useCurrentPage, useSelectedCls, whoAmI }) => {
           <ContestTutorials whoAmI={whoAmI} cls={cls} page={page} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <ContestTeam />
+          <ContestTeam whoAmI={whoAmI} cls={cls} />
         </Grid>
       </Grid>
     </Container>

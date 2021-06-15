@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
+import { db } from '../../utils/firebase';
 
-const ContestTeam = () => {
+const propTypes = {
+  whoAmI: PropTypes.object,
+  cls: PropTypes.object
+};
+
+const defaultProps = {
+  whoAmI: null,
+  cls: null
+};
+
+const ContestTeam = ({ whoAmI, cls }) => {
   const [name, setName] = useState('');
   const classes = useStyles();
 
   const createTeam = e => {
     e.preventDefault();
-    console.log('Creating team:', name);
+    if (whoAmI && cls) {
+      const data = {
+        name,
+        members: [whoAmI?.id],
+        classId: cls?.id
+      };
+      db.collection('contestTeams')
+        .doc()
+        .set(data);
+      console.log('Creating team:', data);
+    }
   };
 
   return (
@@ -32,6 +54,8 @@ const ContestTeam = () => {
     </Paper>
   );
 };
+ContestTeam.propTypes = propTypes;
+ContestTeam.defaultProps = defaultProps;
 
 const useStyles = makeStyles({
   paper: {
