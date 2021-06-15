@@ -17,11 +17,19 @@ import ContestTutorials from '../Contest/Tutorials';
  */
 
 const propTypes = {
-  useCurrentPage: PropTypes.func.isRequired
+  useCurrentPage: PropTypes.func.isRequired,
+  useSelectedCls: PropTypes.func,
+  whoAmI: PropTypes.object
 };
 
-const ContestInterface = ({ useCurrentPage }) => {
+const defaultProps = {
+  useSelectedCls: () => {},
+  whoAmI: null
+};
+
+const ContestInterface = ({ useCurrentPage, useSelectedCls, whoAmI }) => {
   const [page] = useCurrentPage();
+  const [cls] = useSelectedCls();
   const classes = useStyles();
   return (
     <Container maxWidth="xl" className={classes.wrapper}>
@@ -30,13 +38,14 @@ const ContestInterface = ({ useCurrentPage }) => {
       </Typography>
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={12} md={5}>
-          <ContestTutorials page={page} />
+          <ContestTutorials whoAmI={whoAmI} cls={cls} page={page} />
         </Grid>
       </Grid>
     </Container>
   );
 };
 ContestInterface.propTypes = propTypes;
+ContestInterface.defaultProps = defaultProps;
 
 const useStyles = makeStyles({
   wrapper: {

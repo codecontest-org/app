@@ -2,35 +2,44 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { getLiveTutorialSelection } from '../../hooks/pages';
+import { gameTypes } from '../../utils/globals';
 
 const propTypes = {
+  whoAmI: PropTypes.object,
+  cls: PropTypes.object,
   page: PropTypes.string
 };
 
 const defaultProps = {
+  whoAmI: null,
+  cls: null,
   page: ''
 };
 
-const ContestTutorials = ({ page }) => {
+const ContestTutorials = ({ whoAmI, cls, page }) => {
+  const selection = getLiveTutorialSelection(whoAmI?.id, cls?.id);
+
   const pageUrl = useMemo(
     () => (page !== '' ? `/parent/tutorials?page=${page}` : '/parent/tutorials'),
     [page]
   );
 
-  /**
-   * TODO: Use the tutorial selection for the first
-   * half of the page info...
-   * ALSO: It might be cool to use local storage here
-   * to create some kind of local persistence?
-   */
+  const toTitle = s => {
+    const name = gameTypes[s?.type];
+    if (name) return name.concat(' Tutorial');
+    return 'N/A';
+  };
+
   const pageInfo = useMemo(() => {
+    const auto = toTitle(selection);
     if (page !== '') {
       const parts = page.split('.');
       if (parts.length > 1) return parts;
-      return ['N/A', page];
+      return [auto, page];
     }
-    return ['N/A', 'Welcome to CodeContest'];
-  }, [page]);
+    return [auto, 'Welcome to CodeContest'];
+  }, [page, selection]);
 
   const history = useHistory();
   const classes = useStyles();
