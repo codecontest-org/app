@@ -4,6 +4,7 @@ import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { getLiveTutorialSelection, getFilteredLiveCheckOffsData } from '../../hooks/pages';
 import { gameTypes } from '../../utils/globals';
+import tutorials from '../../resources/tutorials';
 
 const propTypes = {
   whoAmI: PropTypes.object,
@@ -26,11 +27,6 @@ const ContestTutorials = ({ whoAmI, cls, page }) => {
       .where('approved', '==', true)
   );
 
-  const coCount = useMemo(
-    () => checkOffs.filter(co => co.page.includes(gameTypes[selection?.type])).length,
-    [checkOffs, selection]
-  );
-
   const pageUrl = useMemo(
     () => (page !== '' ? `/parent/tutorials?page=${page}` : '/parent/tutorials'),
     [page]
@@ -51,6 +47,18 @@ const ContestTutorials = ({ whoAmI, cls, page }) => {
     return [typeTitle, 'Welcome to CodeContest'];
   }, [page, typeTitle]);
 
+  const coCount = useMemo(
+    () => checkOffs.filter(co => co.page.includes(gameTypes[selection?.type])).length,
+    [checkOffs, selection]
+  );
+
+  const coTotal = useMemo(() => {
+    if (typeTitle !== 'N/A') {
+      return Object.keys(tutorials[typeTitle]).filter(t => t.includes('✓')).length - 1;
+    }
+    return 0;
+  }, [typeTitle]);
+
   const history = useHistory();
   const classes = useStyles();
   return (
@@ -63,7 +71,7 @@ const ContestTutorials = ({ whoAmI, cls, page }) => {
           <strong>Turtorial:</strong> {pageInfo[0]}
         </Typography>
         <Typography variant="body1">
-          <strong>Checkoffs:</strong> {coCount} / 9
+          <strong>Checkoffs:</strong> {coCount} / {coTotal}
         </Typography>
       </div>
       <div className={classes.row}>
