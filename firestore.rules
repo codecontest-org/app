@@ -50,6 +50,12 @@ service cloud.firestore {
         allow read, write: if resource.data.parentId == request.auth.uid;
       }
 
+      match /contestTeams/{team} {
+        allow create: if request.auth.uid != null;
+        // TODO: proper validation.
+        allow read, write: if true;
+      }
+
       // Account Types
       match /organizations/{organization} {
         allow create: if request.auth.uid != null;
