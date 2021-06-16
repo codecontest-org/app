@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
+import { useAccountRef } from '../../hooks/accounts';
 import { db } from '../../utils/firebase';
 
 const propTypes = {
@@ -15,6 +16,7 @@ const defaultProps = {
 
 const ContestTeam = ({ whoAmI, cls }) => {
   const [name, setName] = useState('');
+  const parent = useAccountRef('parents');
   const classes = useStyles();
 
   const createTeam = e => {
@@ -22,13 +24,13 @@ const ContestTeam = ({ whoAmI, cls }) => {
     if (whoAmI && cls) {
       const data = {
         name,
-        members: [whoAmI?.id],
-        classId: cls?.id
+        teamOwner: parent?.id,
+        members: [whoAmI?.ref],
+        classRef: cls?.ref
       };
       db.collection('contestTeams')
         .doc()
         .set(data);
-      console.log('Creating team:', data);
     }
   };
 
