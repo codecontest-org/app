@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
 import { useAccountRef } from '../../hooks/accounts';
+import { toData } from '../../utils/helpers';
 import { db } from '../../utils/firebase';
 
 const propTypes = {
@@ -19,7 +20,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
   const parent = useAccountRef('parents');
   const classes = useStyles();
 
-  const createTeam = e => {
+  const createTeam = async e => {
     e.preventDefault();
     if (whoAmI && cls) {
       const data = {
@@ -28,10 +29,22 @@ const ContestTeam = ({ whoAmI, cls }) => {
         members: [whoAmI?.ref],
         classRef: cls?.ref
       };
-      db.collection('contestTeams')
-        .doc()
-        .set(data);
+      const teamRef = db.collection('contestTeams').doc();
+      await teamRef.set(data);
+      joinTeam(teamRef);
     }
+  };
+
+  const joinTeam = async teamRef => {
+    const childData = toData(await whoAmI.ref.get());
+    const teamEntry = { [cls.id]: teamRef };
+    let childTeams = childData.teams;
+    if (childTeams) {
+      childTeams = { ...childTeams, ...teamEntry };
+    } else {
+      childTeams = teamEntry;
+    }
+    whoAmI.ref.update({ teams: childTeams });
   };
 
   return (
