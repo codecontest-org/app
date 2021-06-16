@@ -51,9 +51,8 @@ service cloud.firestore {
       }
 
       match /contestTeams/{team} {
-        allow create: if request.auth.uid != null;
-        // TODO: proper validation.
-        allow read, write: if true;
+        allow read, create: if request.auth.uid != null;
+        allow write: if request.data.teamOwner == request.auth.uid;
       }
 
       // Account Types
