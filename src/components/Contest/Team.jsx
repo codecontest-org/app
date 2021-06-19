@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
 import { useAccountRef } from '../../hooks/accounts';
+import { useLiveTeamData } from '../../hooks/teams';
 import { toData } from '../../utils/helpers';
 import { db } from '../../utils/firebase';
 
@@ -17,8 +18,17 @@ const defaultProps = {
 
 const ContestTeam = ({ whoAmI, cls }) => {
   const [name, setName] = useState('');
+  const [rurl, setRurl] = useState('');
   const parent = useAccountRef('parents');
   const classes = useStyles();
+
+  const teamRef = useMemo(() => {
+    const team = whoAmI?.teams[cls?.id];
+    if (team) return team;
+    return null;
+  }, [whoAmI]);
+
+  const team = useLiveTeamData(teamRef);
 
   const createTeam = async e => {
     e.preventDefault();
@@ -29,15 +39,15 @@ const ContestTeam = ({ whoAmI, cls }) => {
         members: [whoAmI?.ref],
         classRef: cls?.ref
       };
-      const teamRef = db.collection('contestTeams').doc();
-      await teamRef.set(data);
-      joinTeam(teamRef);
+      const newTeamRef = db.collection('contestTeams').doc();
+      await newTeamRef.set(data);
+      joinTeam(newTeamRef);
     }
   };
 
-  const joinTeam = async teamRef => {
+  const joinTeam = async ref => {
     const childData = toData(await whoAmI.ref.get());
-    const teamEntry = { [cls.id]: teamRef };
+    const teamEntry = { [cls.id]: ref };
     let childTeams = childData.teams;
     if (childTeams) {
       childTeams = { ...childTeams, ...teamEntry };
@@ -46,6 +56,41 @@ const ContestTeam = ({ whoAmI, cls }) => {
     }
     whoAmI.ref.update({ teams: childTeams });
   };
+
+  const setReplURL = e => {
+    e.preventDefault();
+    console.log('setting rurl', rurl);
+  };
+
+  const renderRepl = () => {
+    if (team?.replURL) {
+      return <Typography variant="h6">{team.replURL}</Typography>;
+    }
+    return (
+      <form onSubmit={setReplURL} className={classes.repl}>
+        <TextField
+          value={rurl}
+          onChange={e => setRurl(e.target.value)}
+          className={classes.input}
+          variant="outlined"
+          label="Replit URL"
+          placeholder="https://replit.com/@user/code"
+        />
+        <Button type="submit" variant="contained" color="secondary" className={classes.submit}>
+          Submit
+        </Button>
+      </form>
+    );
+  };
+
+  if (team !== null) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h3">{team.name}</Typography>
+        {renderRepl()}
+      </Paper>
+    );
+  }
 
   return (
     <Paper className={classes.paper}>
@@ -87,6 +132,15 @@ const useStyles = makeStyles({
   input: {
     flexGrow: 1,
     marginRight: 20
+  },
+  repl: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20
+  },
+  submit: {
+    padding: '6px 32px'
   }
 });
 
