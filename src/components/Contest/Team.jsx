@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
 import { useAccountRef } from '../../hooks/accounts';
+import { useLiveChild } from '../../hooks/children';
 import { useLiveTeamData } from '../../hooks/teams';
 import { replitURLValidation } from '../../utils/globals';
 import { toData } from '../../utils/helpers';
@@ -31,6 +32,11 @@ const ContestTeam = ({ whoAmI, cls }) => {
   }, [whoAmI]);
 
   const team = useLiveTeamData(teamRef);
+
+  const ownerRef = useMemo(() => (team && team.members.length > 0 ? team.members[0] : null), [
+    team
+  ]);
+  const owner = useLiveChild(ownerRef);
 
   const createTeam = async e => {
     e.preventDefault();
@@ -73,16 +79,15 @@ const ContestTeam = ({ whoAmI, cls }) => {
     }
   };
 
-  const renderRepl = () => {
+  const ReplUI = () => {
     if (team?.replURL) {
       const abbr = team.replURL.replace('https://', '').replace('replit.com/', '');
       return (
-        <Typography variant="h6" className={classes.teamItem}>
-          Replit:{' '}
+        <InfoItem title="Replit">
           <a href={team.replURL} target="_blank" rel="noreferrer noopener">
             {abbr}
           </a>
-        </Typography>
+        </InfoItem>
       );
     }
     return (
@@ -108,7 +113,8 @@ const ContestTeam = ({ whoAmI, cls }) => {
     return (
       <Paper className={classes.paper}>
         <Typography variant="h3">{team.name}</Typography>
-        {renderRepl()}
+        <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
+        <ReplUI />
       </Paper>
     );
   }
@@ -138,6 +144,16 @@ const ContestTeam = ({ whoAmI, cls }) => {
 ContestTeam.propTypes = propTypes;
 ContestTeam.defaultProps = defaultProps;
 
+const InfoItem = ({ title, children }) => {
+  const classes = useStyles();
+  return (
+    <Typography variant="h6" className={classes.infoItem}>
+      <strong>{title}</strong>: {children}
+    </Typography>
+  );
+};
+InfoItem.propTypes = { title: PropTypes.string.isRequired, children: PropTypes.node.isRequired };
+
 const useStyles = makeStyles({
   paper: {
     padding: 20,
@@ -163,7 +179,7 @@ const useStyles = makeStyles({
   submit: {
     padding: '6px 32px'
   },
-  teamItem: {
+  infoItem: {
     marginTop: 15,
     '& a': {
       color: 'var(--pink-color)',
