@@ -29,15 +29,10 @@ const defaultProps = {
 };
 
 const ContestTeam = ({ whoAmI, cls }) => {
-  const [name, setName] = useState('');
-  const [rurl, setRurl] = useState('');
-  const [rurlError, setRError] = useState('');
   const [toggles, setToggles] = useState({
     showCreate: false
   });
   const updateToggles = newToggles => setToggles({ ...toggles, ...newToggles });
-  const parent = useAccountRef('parents');
-  const classes = useStyles();
 
   const teamRef = useMemo(() => {
     const myTeams = whoAmI?.teams;
@@ -47,13 +42,47 @@ const ContestTeam = ({ whoAmI, cls }) => {
     }
     return null;
   }, [whoAmI]);
-
   const team = useLiveTeamData(teamRef);
 
   const ownerRef = useMemo(() => (team && team.members.length > 0 ? team.members[0] : null), [
     team
   ]);
   const owner = useLiveChild(ownerRef);
+
+  const classes = useStyles();
+
+  if (team !== null) {
+    // Team Info Screen
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h3" align="center">
+          My Team
+        </Typography>
+        <InfoItem title="Name">{team.name}</InfoItem>
+        <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
+        <ReplUI team={team} teamRef={teamRef} />
+      </Paper>
+    );
+  }
+
+  if (toggles.showCreate) return <CreateScreen />;
+
+  return <MainScreen updateToggles={updateToggles} />;
+};
+ContestTeam.propTypes = propTypes;
+ContestTeam.defaultProps = defaultProps;
+
+/* ======================
+ * === Sub-Components ===
+ * ====================== */
+
+/**
+ * An interface that allows users to create a new team.
+ */
+const CreateScreen = ({ whoAmI, cls, updateToggles }) => {
+  const parent = useAccountRef('parents');
+  const [name, setName] = useState('');
+  const classes = useStyles();
 
   const createTeam = async e => {
     e.preventDefault();
@@ -82,100 +111,53 @@ const ContestTeam = ({ whoAmI, cls }) => {
     whoAmI.ref.update({ teams: childTeams });
   };
 
-  const setReplURL = e => {
-    e.preventDefault();
-    if (replitURLValidation.test(rurl)) {
-      if (teamRef !== null) {
-        setRError('');
-        teamRef.update({ replURL: rurl }).catch(() => setRError('Failed to set URL.'));
-      } else {
-        setRError('Failed to set URL.');
-      }
-    } else {
-      setRError('Invalid Replit URL!');
-    }
-  };
-
-  const ReplUI = () => {
-    if (team?.replURL) {
-      const abbr = team.replURL.replace('https://', '').replace('replit.com/', '');
-      return (
-        <InfoItem title="Replit">
-          <a href={team.replURL} target="_blank" rel="noreferrer noopener">
-            {abbr}
-          </a>
-        </InfoItem>
-      );
-    }
-    return (
-      <form onSubmit={setReplURL} className={classes.repl}>
+  return (
+    <Paper className={classes.paper}>
+      <div className={classes.row}>
+        <Tooltip title="Back">
+          <IconButton
+            size="small"
+            edge="start"
+            className={classes.backBtn}
+            onClick={() => updateToggles({ showCreate: false })}
+          >
+            <ArrowBack />
+          </IconButton>
+        </Tooltip>
+        <Typography variant="h3">Create a Team</Typography>
+        <div style={{ display: 'block', width: 30 }} />
+      </div>
+      <Typography variant="body1" style={{ marginTop: 20 }}>
+        Create a team and invite your teammates so you can work together to make an awesome game!
+      </Typography>
+      <form onSubmit={createTeam} className={classes.createForm}>
         <TextField
-          value={rurl}
-          onChange={e => setRurl(e.target.value)}
-          className={classes.input}
           variant="outlined"
-          label="Replit URL"
-          placeholder="https://replit.com/@user/code"
-          error={rurlError !== ''}
-          helperText={rurlError}
+          label="Team Name"
+          placeholder="The C00l T3@m"
+          className={classes.input}
+          value={name}
+          onChange={e => setName(e.target.value)}
         />
-        <Button type="submit" variant="contained" color="secondary" className={classes.submit}>
-          Submit
+        <Button type="submit" variant="contained" color="primary">
+          Create
         </Button>
       </form>
-    );
-  };
+    </Paper>
+  );
+};
+CreateScreen.propTypes = {
+  whoAmI: PropTypes.object,
+  cls: PropTypes.object,
+  updateToggles: PropTypes.func.isRequired
+};
+CreateScreen.defaultProps = { whoAmI: null, cls: null };
 
-  if (team !== null) {
-    return (
-      <Paper className={classes.paper}>
-        <Typography variant="h3" align="center">
-          My Team
-        </Typography>
-        <InfoItem title="Name">{team.name}</InfoItem>
-        <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
-        <ReplUI />
-      </Paper>
-    );
-  }
-
-  if (toggles.showCreate) {
-    return (
-      <Paper className={classes.paper}>
-        <div className={classes.row}>
-          <Tooltip title="Back">
-            <IconButton
-              size="small"
-              edge="start"
-              className={classes.backBtn}
-              onClick={() => updateToggles({ showCreate: false })}
-            >
-              <ArrowBack />
-            </IconButton>
-          </Tooltip>
-          <Typography variant="h3">Create a Team</Typography>
-          <div style={{ display: 'block', width: 30 }} />
-        </div>
-        <Typography variant="body1" style={{ marginTop: 20 }}>
-          Create a team and invite your teammates so you can work together to make an awesome game!
-        </Typography>
-        <form onSubmit={createTeam} className={classes.createForm}>
-          <TextField
-            variant="outlined"
-            label="Team Name"
-            placeholder="The C00l T3@m"
-            className={classes.input}
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
-          <Button type="submit" variant="contained" color="primary">
-            Create
-          </Button>
-        </form>
-      </Paper>
-    );
-  }
-
+/**
+ * Gives users options on how to join a team.
+ */
+const MainScreen = ({ updateToggles }) => {
+  const classes = useStyles();
   return (
     <Paper className={clsx([classes.paper, classes.centerCol])}>
       <Typography variant="h3" align="center">
@@ -193,9 +175,64 @@ const ContestTeam = ({ whoAmI, cls }) => {
     </Paper>
   );
 };
-ContestTeam.propTypes = propTypes;
-ContestTeam.defaultProps = defaultProps;
+MainScreen.propTypes = { updateToggles: PropTypes.func.isRequired };
 
+/**
+ * Allows users to set the repl url for their team.
+ */
+const ReplUI = ({ team, teamRef }) => {
+  const [rurl, setRurl] = useState('');
+  const [rurlError, setRError] = useState('');
+  const classes = useStyles();
+
+  const setReplURL = e => {
+    e.preventDefault();
+    if (replitURLValidation.test(rurl)) {
+      if (teamRef !== null) {
+        setRError('');
+        teamRef.update({ replURL: rurl }).catch(() => setRError('Failed to set URL.'));
+      } else {
+        setRError('Failed to set URL.');
+      }
+    } else {
+      setRError('Invalid Replit URL!');
+    }
+  };
+
+  if (team?.replURL) {
+    const abbr = team.replURL.replace('https://', '').replace('replit.com/', '');
+    return (
+      <InfoItem title="Replit">
+        <a href={team.replURL} target="_blank" rel="noreferrer noopener">
+          {abbr}
+        </a>
+      </InfoItem>
+    );
+  }
+  return (
+    <form onSubmit={setReplURL} className={classes.repl}>
+      <TextField
+        value={rurl}
+        onChange={e => setRurl(e.target.value)}
+        className={classes.input}
+        variant="outlined"
+        label="Replit URL"
+        placeholder="https://replit.com/@user/code"
+        error={rurlError !== ''}
+        helperText={rurlError}
+      />
+      <Button type="submit" variant="contained" color="secondary" className={classes.submit}>
+        Submit
+      </Button>
+    </form>
+  );
+};
+ReplUI.propTypes = { team: PropTypes.object, teamRef: PropTypes.object };
+ReplUI.defaultProps = { team: null, teamRef: null };
+
+/**
+ * A formatted information item.
+ */
 const InfoItem = ({ title, children }) => {
   const classes = useStyles();
   return (
@@ -205,6 +242,10 @@ const InfoItem = ({ title, children }) => {
   );
 };
 InfoItem.propTypes = { title: PropTypes.string.isRequired, children: PropTypes.node.isRequired };
+
+/* ========================
+ * === Component Styles ===
+ * ======================== */
 
 const useStyles = makeStyles({
   paper: {
