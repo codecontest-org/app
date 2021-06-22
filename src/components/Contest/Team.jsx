@@ -75,7 +75,15 @@ const ContestTeam = ({ whoAmI, cls }) => {
 
   const renderRepl = () => {
     if (team?.replURL) {
-      return <Typography variant="h6">{team.replURL}</Typography>;
+      const abbr = team.replURL.replace('https://', '').replace('replit.com/', '');
+      return (
+        <Typography variant="h6" className={classes.teamItem}>
+          Replit:{' '}
+          <a href={team.replURL} target="_blank" rel="noreferrer noopener">
+            {abbr}
+          </a>
+        </Typography>
+      );
     }
     return (
       <form onSubmit={setReplURL} className={classes.repl}>
@@ -154,6 +162,13 @@ const useStyles = makeStyles({
   },
   submit: {
     padding: '6px 32px'
+  },
+  teamItem: {
+    marginTop: 15,
+    '& a': {
+      color: 'var(--pink-color)',
+      textDecoration: 'none'
+    }
   }
 });
 
