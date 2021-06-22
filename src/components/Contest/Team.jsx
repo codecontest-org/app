@@ -1,6 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
+import {
+  Button,
+  IconButton,
+  Paper,
+  TextField,
+  Tooltip,
+  Typography,
+  makeStyles
+} from '@material-ui/core';
+import { ArrowBack, Add } from '@material-ui/icons';
+import clsx from 'clsx';
 import { useAccountRef } from '../../hooks/accounts';
 import { useLiveChild } from '../../hooks/children';
 import { useLiveTeamData } from '../../hooks/teams';
@@ -22,6 +32,10 @@ const ContestTeam = ({ whoAmI, cls }) => {
   const [name, setName] = useState('');
   const [rurl, setRurl] = useState('');
   const [rurlError, setRError] = useState('');
+  const [toggles, setToggles] = useState({
+    showCreate: false
+  });
+  const updateToggles = newToggles => setToggles({ ...toggles, ...newToggles });
   const parent = useAccountRef('parents');
   const classes = useStyles();
 
@@ -122,25 +136,57 @@ const ContestTeam = ({ whoAmI, cls }) => {
     );
   }
 
+  if (toggles.showCreate) {
+    return (
+      <Paper className={classes.paper}>
+        <div className={classes.row}>
+          <Tooltip title="Back">
+            <IconButton
+              size="small"
+              edge="start"
+              className={classes.backBtn}
+              onClick={() => updateToggles({ showCreate: false })}
+            >
+              <ArrowBack />
+            </IconButton>
+          </Tooltip>
+          <Typography variant="h3">Create a Team</Typography>
+          <div style={{ display: 'block', width: 30 }} />
+        </div>
+        <Typography variant="body1" style={{ marginTop: 20 }}>
+          Create a team and invite your teammates so you can work together to make an awesome game!
+        </Typography>
+        <form onSubmit={createTeam} className={classes.createForm}>
+          <TextField
+            variant="outlined"
+            label="Team Name"
+            placeholder="The C00l T3@m"
+            className={classes.input}
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
+          <Button type="submit" variant="contained" color="primary">
+            Create
+          </Button>
+        </form>
+      </Paper>
+    );
+  }
+
   return (
-    <Paper className={classes.paper}>
-      <Typography variant="h3">Team Info</Typography>
-      <Typography variant="body1">
-        Create a team and invite your teammates! Then work together to make an awesome game!
+    <Paper className={clsx([classes.paper, classes.centerCol])}>
+      <Typography variant="h3" align="center">
+        Join a Team
       </Typography>
-      <form onSubmit={createTeam} className={classes.createForm}>
-        <TextField
-          variant="outlined"
-          label="Team Name"
-          placeholder="The C00l T3@m"
-          className={classes.input}
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Create
-        </Button>
-      </form>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<Add />}
+        className={classes.mainBtn}
+        onClick={() => updateToggles({ showCreate: true })}
+      >
+        Create a Team
+      </Button>
     </Paper>
   );
 };
@@ -162,12 +208,31 @@ const useStyles = makeStyles({
     padding: 20,
     boxSizing: 'border-box'
   },
+  centerCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  row: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   createForm: {
     width: '100%',
     marginTop: 30,
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center'
+  },
+  backBtn: {
+    flexShrink: 0,
+    height: 30
+  },
+  mainBtn: {
+    margin: '20px 0',
+    padding: '6px 40px'
   },
   input: {
     flexGrow: 1,
