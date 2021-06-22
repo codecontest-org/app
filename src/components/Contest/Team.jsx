@@ -20,6 +20,7 @@ const defaultProps = {
 const ContestTeam = ({ whoAmI, cls }) => {
   const [name, setName] = useState('');
   const [rurl, setRurl] = useState('');
+  const [rurlError, setRError] = useState('');
   const parent = useAccountRef('parents');
   const classes = useStyles();
 
@@ -60,11 +61,11 @@ const ContestTeam = ({ whoAmI, cls }) => {
 
   const setReplURL = e => {
     e.preventDefault();
-    const urlIsValid = replitURLValidation.test(rurl);
-    if (urlIsValid) {
+    if (replitURLValidation.test(rurl)) {
       console.log('setting rurl', rurl);
+      setRError('');
     } else {
-      console.log('Invalid url!', rurl);
+      setRError('Invalid Replit URL!');
     }
   };
 
@@ -81,6 +82,8 @@ const ContestTeam = ({ whoAmI, cls }) => {
           variant="outlined"
           label="Replit URL"
           placeholder="https://replit.com/@user/code"
+          error={rurlError !== ''}
+          helperText={rurlError}
         />
         <Button type="submit" variant="contained" color="secondary" className={classes.submit}>
           Submit
