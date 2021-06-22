@@ -26,8 +26,11 @@ const ContestTeam = ({ whoAmI, cls }) => {
   const classes = useStyles();
 
   const teamRef = useMemo(() => {
-    const team = whoAmI?.teams[cls?.id];
-    if (team) return team;
+    const myTeams = whoAmI?.teams;
+    if (myTeams) {
+      const team = myTeams[cls?.id];
+      if (team) return team;
+    }
     return null;
   }, [whoAmI]);
 
