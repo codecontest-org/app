@@ -11,7 +11,8 @@ import { useAccountRef } from './accounts';
  */
 export const useLiveChild = childRef => {
   const [child, setChild] = useState(null);
-  useEffect(liveChildDataEffect(childRef, setChild), [childRef]);
+  const handleError = () => setChild(null);
+  useEffect(liveChildDataEffect(childRef, setChild, handleError), [childRef]);
   return child;
 };
 
