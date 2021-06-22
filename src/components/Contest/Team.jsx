@@ -62,8 +62,12 @@ const ContestTeam = ({ whoAmI, cls }) => {
   const setReplURL = e => {
     e.preventDefault();
     if (replitURLValidation.test(rurl)) {
-      console.log('setting rurl', rurl);
-      setRError('');
+      if (teamRef !== null) {
+        setRError('');
+        teamRef.update({ replURL: rurl }).catch(() => setRError('Failed to set URL.'));
+      } else {
+        setRError('Failed to set URL.');
+      }
     } else {
       setRError('Invalid Replit URL!');
     }
