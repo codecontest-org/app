@@ -129,7 +129,10 @@ const ContestTeam = ({ whoAmI, cls }) => {
   if (team !== null) {
     return (
       <Paper className={classes.paper}>
-        <Typography variant="h3">{team.name}</Typography>
+        <Typography variant="h3" align="center">
+          My Team
+        </Typography>
+        <InfoItem title="Name">{team.name}</InfoItem>
         <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
         <ReplUI />
       </Paper>
