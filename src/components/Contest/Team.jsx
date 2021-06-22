@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
 import { useAccountRef } from '../../hooks/accounts';
 import { useLiveTeamData } from '../../hooks/teams';
+import { replitURLValidation } from '../../utils/globals';
 import { toData } from '../../utils/helpers';
 import { db } from '../../utils/firebase';
 
@@ -59,7 +60,12 @@ const ContestTeam = ({ whoAmI, cls }) => {
 
   const setReplURL = e => {
     e.preventDefault();
-    console.log('setting rurl', rurl);
+    const urlIsValid = replitURLValidation.test(rurl);
+    if (urlIsValid) {
+      console.log('setting rurl', rurl);
+    } else {
+      console.log('Invalid url!', rurl);
+    }
   };
 
   const renderRepl = () => {

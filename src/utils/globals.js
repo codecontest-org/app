@@ -1,6 +1,7 @@
 export const phoneValidation = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im; // eslint-disable-line
 export const emailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
 export const birthDateValidation = /(\d+)(-|\/)(\d+)(?:-|\/)(?:(\d+)\s+(\d+):(\d+)(?::(\d+))?(?:\.(\d+))?)?/; // eslint-disable-line
+export const replitURLValidation = /(https:\/\/)?replit\.com\/@[a-zA-Z0-9]+\/([a-zA-Z0-9]+(-[a-zA-Z0-9]+)?)/;
 
 export const URL = process.env.REACT_APP_REDIR_URL;
 export const STRIPE_KEY = process.env.REACT_APP_STRIPE_KEY;

@@ -38,7 +38,7 @@ const ContestInterface = ({ useCurrentPage, useSelectedCls, whoAmI }) => {
         Code Contest Dashboard
       </Typography>
       <Grid container spacing={3} className={classes.grid}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <ContestTutorials whoAmI={whoAmI} cls={cls} page={page} />
         </Grid>
         <Grid item xs={12} md={6}>
