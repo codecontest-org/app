@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -27,17 +27,20 @@ const defaultProps = {
 
 const InviteModal = ({ open, onClose, cls }) => {
   const [children, isLoading] = useChildren(cls?.children);
+  const [search, setSearch] = useState('');
   const classes = useStyles();
+  const searchFilter = c => `${c.fName} ${c.lName}`.toLowerCase().includes(search.toLowerCase());
   return (
     <Modal open={open} onClose={onClose}>
       <ModalHeader title="Invite Members" backButton onBack={onClose} />
-      <SearchBar classes={{ root: classes.search }} />
+      <SearchBar classes={{ root: classes.search }} handleSearch={setSearch} />
       {isLoading ? (
         <CircularProgress />
       ) : (
         <List classes={{ root: classes.listRoot }}>
           {children
             .sort((a, b) => (a.fName < b.fName ? -1 : 1)) // Alphabetize
+            .filter(searchFilter) // Apply search
             .map(child => (
               <ListItem key={child.id} divider>
                 <ListItemText>
