@@ -1,22 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from '@material-ui/core';
+import { CircularProgress, Typography } from '@material-ui/core';
 import Modal from '../../UI/Modal';
+import { useChildren } from '../../../hooks/children';
 
 const propTypes = {
   open: PropTypes.bool,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  cls: PropTypes.object
 };
 
 const defaultProps = {
   open: false,
-  onClose: () => {}
+  onClose: () => {},
+  cls: null
 };
 
-const InviteModal = ({ open, onClose }) => {
+const InviteModal = ({ open, onClose, cls }) => {
+  const [children, isLoading] = useChildren(cls?.children);
   return (
     <Modal open={open} onClose={onClose}>
-      <Typography variant="body1">Hello World</Typography>
+      <Typography variant="h3">Invite Members</Typography>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        children.map(child => (
+          <Typography variant="body1" key={child.id}>
+            {child.fName}
+          </Typography>
+        ))
+      )}
     </Modal>
   );
 };

@@ -70,6 +70,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
           )}
         </Paper>
         <InviteModal
+          cls={cls}
           open={toggles.showInviteModal}
           onClose={() => updateToggles({ showInviteModal: false })}
         />
