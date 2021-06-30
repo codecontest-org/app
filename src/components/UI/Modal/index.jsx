@@ -4,10 +4,8 @@ import MUIModal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core';
 import Paper from '../Paper';
 
-// Import sub components.
-import Header from './Header';
-// Export sub components.
-export const ModalHeader = Header;
+// Export sub-components.
+export { default as ModalHeader } from './Header';
 
 const propTypes = {
   open: PropTypes.bool,
