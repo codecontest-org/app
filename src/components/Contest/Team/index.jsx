@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Paper, Typography, makeStyles } from '@material-ui/core';
+import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import { useLiveChild } from '../../../hooks/children';
 import { useLiveTeamData } from '../../../hooks/teams';
 
@@ -8,6 +9,7 @@ import CreateScreen from './Create';
 import MainScreen from './Main';
 import ReplUI from './Repl';
 import InfoItem from './Item';
+import InviteModal from './InviteModal';
 
 const propTypes = {
   whoAmI: PropTypes.object,
@@ -21,7 +23,8 @@ const defaultProps = {
 
 const ContestTeam = ({ whoAmI, cls }) => {
   const [toggles, setToggles] = useState({
-    showCreate: false
+    showCreate: false,
+    showInviteModal: false
   });
   const updateToggles = newToggles => setToggles({ ...toggles, ...newToggles });
 
@@ -39,20 +42,38 @@ const ContestTeam = ({ whoAmI, cls }) => {
     team
   ]);
   const owner = useLiveChild(ownerRef);
+  const iAmOwner = owner && owner?.id === whoAmI?.id;
 
   const classes = useStyles();
 
   if (team !== null) {
     // Team Info Screen
     return (
-      <Paper className={classes.paper}>
-        <Typography variant="h3" align="center">
-          My Team
-        </Typography>
-        <InfoItem title="Name">{team.name}</InfoItem>
-        <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
-        <ReplUI team={team} teamRef={teamRef} />
-      </Paper>
+      <>
+        <Paper className={classes.paper}>
+          <Typography variant="h3" align="center">
+            My Team
+          </Typography>
+          <InfoItem title="Name">{team.name}</InfoItem>
+          <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
+          <ReplUI team={team} teamRef={teamRef} />
+          {iAmOwner && (
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Add />}
+              className={classes.inviteButton}
+              onClick={() => updateToggles({ showInviteModal: true })}
+            >
+              Invite Members
+            </Button>
+          )}
+        </Paper>
+        <InviteModal
+          open={toggles.showInviteModal}
+          onClose={() => updateToggles({ showInviteModal: false })}
+        />
+      </>
     );
   }
 
@@ -67,7 +88,15 @@ ContestTeam.defaultProps = defaultProps;
 const useStyles = makeStyles({
   paper: {
     padding: 20,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
+  },
+  inviteButton: {
+    marginTop: 20,
+    alignSelf: 'flex-end'
   }
 });
 
