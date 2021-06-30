@@ -16,20 +16,36 @@ import { useChildren } from '../../../hooks/children';
 const propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  cls: PropTypes.object
+  cls: PropTypes.object,
+  team: PropTypes.object
 };
 
 const defaultProps = {
   open: false,
   onClose: () => {},
-  cls: null
+  cls: null,
+  team: null
 };
 
-const InviteModal = ({ open, onClose, cls }) => {
+const InviteModal = ({ open, onClose, cls, team }) => {
   const [children, isLoading] = useChildren(cls?.children);
   const [search, setSearch] = useState('');
   const classes = useStyles();
+
   const searchFilter = c => `${c.fName} ${c.lName}`.toLowerCase().includes(search.toLowerCase());
+
+  const invite = child => {
+    if (team !== null) {
+      const data = {
+        childId: child.id,
+        parentId: child.parent.id,
+        ownerId: team.teamOwner,
+        teamId: team.id
+      };
+      console.log(data);
+    }
+  };
+
   return (
     <Modal open={open} onClose={onClose}>
       <ModalHeader title="Invite Members" backButton onBack={onClose} />
@@ -47,7 +63,7 @@ const InviteModal = ({ open, onClose, cls }) => {
                   {child.fName} {child.lName}
                 </ListItemText>
                 <ListItemSecondaryAction>
-                  <Button variant="outlined" color="secondary">
+                  <Button variant="outlined" color="secondary" onClick={() => invite(child)}>
                     Invite
                   </Button>
                 </ListItemSecondaryAction>
