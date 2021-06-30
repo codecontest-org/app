@@ -10,6 +10,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Modal, { ModalHeader } from '../../UI/Modal';
+import SearchBar from '../../UI/SearchBar';
 import { useChildren } from '../../../hooks/children';
 
 const propTypes = {
@@ -30,6 +31,7 @@ const InviteModal = ({ open, onClose, cls }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <ModalHeader title="Invite Members" backButton onBack={onClose} />
+      <SearchBar classes={{ root: classes.search }} />
       {isLoading ? (
         <CircularProgress />
       ) : (
@@ -66,6 +68,10 @@ const useStyles = makeStyles({
   closeBtn: {
     marginTop: 15,
     padding: '6px 32px'
+  },
+  search: {
+    width: '100%',
+    margin: '10px 20px'
   }
 });
 
