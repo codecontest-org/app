@@ -7,10 +7,9 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  Typography,
   makeStyles
 } from '@material-ui/core';
-import Modal from '../../UI/Modal';
+import Modal, { ModalHeader } from '../../UI/Modal';
 import { useChildren } from '../../../hooks/children';
 
 const propTypes = {
@@ -30,7 +29,7 @@ const InviteModal = ({ open, onClose, cls }) => {
   const classes = useStyles();
   return (
     <Modal open={open} onClose={onClose}>
-      <Typography variant="h3">Invite Members</Typography>
+      <ModalHeader title="Invite Members" backButton onBack={onClose} />
       {isLoading ? (
         <CircularProgress />
       ) : (

@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  makeStyles,
-  Tooltip,
-  IconButton
-} from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
+import { List, ListItem, ListItemText, makeStyles } from '@material-ui/core';
 import CheckOffPages from './Pages';
 import TabPanel from '../../UI/TabPanel';
+import { ModalHeader } from '../../UI/Modal';
 import { useLiveChildren } from '../../../hooks/children';
 import docs from '../../../resources/docs';
 import tutorials from '../../../resources/tutorials';
@@ -32,30 +24,16 @@ const CheckOffKids = ({ childRefs }) => {
 
   return (
     <>
-      <div className={classes.header}>
-        {selected !== null && (
-          <div className={classes.grow}>
-            <Tooltip title="Back" placement="bottom">
-              <IconButton
-                onClick={() => {
-                  select(null);
-                  setTabIndex(0);
-                }}
-              >
-                <ArrowBack />
-              </IconButton>
-            </Tooltip>
-          </div>
-        )}
-        <Typography variant="h4" className={classes.headerText}>
-          {selected === null ? 'Check Off Progress' : `${selected.fName} ${selected.lName}`}
-        </Typography>
-        {selected !== null && (
-          <div className={classes.grow}>
-            <div style={{ width: 48 }} />
-          </div>
-        )}
-      </div>
+      <ModalHeader
+        title={selected === null ? 'Check Off Progress' : `${selected.fName} ${selected.lName}`}
+        backButton={selected !== null}
+        onBack={() => {
+          select(null);
+          setTabIndex(0);
+        }}
+        variant="h4"
+        classes={{ root: classes.header }}
+      />
       <TabPanel value={tabIndex} index={0} className={classes.panel}>
         <List className={classes.list}>
           {children.length === 0 && (
@@ -107,16 +85,7 @@ const CheckOffKids = ({ childRefs }) => {
 CheckOffKids.propTypes = propTypes;
 
 const useStyles = makeStyles({
-  header: {
-    margin: '20px 0 0 0',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  grow: {
-    flexGrow: 1
-  },
+  header: { margin: '20px 0 0 0' },
   list: {
     width: '100%',
     maxWidth: 600,
