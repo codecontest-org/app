@@ -34,18 +34,20 @@ const InviteModal = ({ open, onClose, cls }) => {
         <CircularProgress />
       ) : (
         <List classes={{ root: classes.listRoot }}>
-          {children.map(child => (
-            <ListItem key={child.id} divider>
-              <ListItemText>
-                {child.fName} {child.lName}
-              </ListItemText>
-              <ListItemSecondaryAction>
-                <Button variant="outlined" color="secondary">
-                  Invite
-                </Button>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
+          {children
+            .sort((a, b) => (a.fName < b.fName ? -1 : 1)) // Alphabetize
+            .map(child => (
+              <ListItem key={child.id} divider>
+                <ListItemText>
+                  {child.fName} {child.lName}
+                </ListItemText>
+                <ListItemSecondaryAction>
+                  <Button variant="outlined" color="secondary">
+                    Invite
+                  </Button>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
         </List>
       )}
       <Button onClick={onClose} className={classes.closeBtn}>
