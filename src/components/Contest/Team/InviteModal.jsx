@@ -33,6 +33,8 @@ const InviteModal = ({ open, onClose, cls, team }) => {
   const [search, setSearch] = useState('');
   const classes = useStyles();
 
+  const teamMemberIds = team?.members.map(m => m.id);
+
   const searchFilter = c => `${c.fName} ${c.lName}`.toLowerCase().includes(search.toLowerCase());
 
   const invite = child => {
@@ -59,6 +61,7 @@ const InviteModal = ({ open, onClose, cls, team }) => {
         <List classes={{ root: classes.listRoot }}>
           {children
             .sort((a, b) => (a.fName < b.fName ? -1 : 1)) // Alphabetize
+            .filter(c => !teamMemberIds.includes(c.id)) // Remove members
             .filter(searchFilter) // Apply search
             .map(child => (
               <ListItem key={child.id} divider>
