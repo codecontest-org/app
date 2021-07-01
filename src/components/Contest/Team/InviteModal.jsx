@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -12,6 +12,7 @@ import {
 import Modal, { ModalHeader } from '../../UI/Modal';
 import SearchBar from '../../UI/SearchBar';
 import { useChildren } from '../../../hooks/children';
+import { useLiveTeamInvites } from '../../../hooks/teams';
 import { db } from '../../../utils/firebase';
 
 const propTypes = {
@@ -29,11 +30,14 @@ const defaultProps = {
 };
 
 const InviteModal = ({ open, onClose, cls, team }) => {
+  const teamInvites = useLiveTeamInvites(team?.id);
   const [children, isLoading] = useChildren(cls?.children);
   const [search, setSearch] = useState('');
   const classes = useStyles();
 
-  const teamMemberIds = team?.members.map(m => m.id);
+  const teamMemberIds = useMemo(() => team?.members.map(m => m.id), [team]);
+
+  const invitedKids = useMemo(() => teamInvites.map(k => k.childId), [teamInvites]);
 
   const searchFilter = c => `${c.fName} ${c.lName}`.toLowerCase().includes(search.toLowerCase());
 
@@ -63,18 +67,26 @@ const InviteModal = ({ open, onClose, cls, team }) => {
             .sort((a, b) => (a.fName < b.fName ? -1 : 1)) // Alphabetize
             .filter(c => !teamMemberIds.includes(c.id)) // Remove members
             .filter(searchFilter) // Apply search
-            .map(child => (
-              <ListItem key={child.id} divider>
-                <ListItemText>
-                  {child.fName} {child.lName}
-                </ListItemText>
-                <ListItemSecondaryAction>
-                  <Button variant="outlined" color="secondary" onClick={() => invite(child)}>
-                    Invite
-                  </Button>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
+            .map(child => {
+              const wasInvited = invitedKids.includes(child.id);
+              return (
+                <ListItem key={child.id} divider>
+                  <ListItemText>
+                    {child.fName} {child.lName}
+                  </ListItemText>
+                  <ListItemSecondaryAction>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      disabled={wasInvited}
+                      onClick={() => invite(child)}
+                    >
+                      {wasInvited ? 'Invited' : 'Invite'}
+                    </Button>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              );
+            })}
         </List>
       )}
       <Button onClick={onClose} className={classes.closeBtn}>
