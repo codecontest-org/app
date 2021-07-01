@@ -12,6 +12,7 @@ import {
 import Modal, { ModalHeader } from '../../UI/Modal';
 import SearchBar from '../../UI/SearchBar';
 import { useChildren } from '../../../hooks/children';
+import { db } from '../../../utils/firebase';
 
 const propTypes = {
   open: PropTypes.bool,
@@ -42,7 +43,9 @@ const InviteModal = ({ open, onClose, cls, team }) => {
         ownerId: team.teamOwner,
         teamId: team.id
       };
-      console.log(data);
+      db.collection('contestTeamInvites')
+        .doc()
+        .set(data);
     }
   };
 
