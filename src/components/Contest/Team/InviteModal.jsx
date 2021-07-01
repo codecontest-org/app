@@ -9,6 +9,7 @@ import {
   ListItemSecondaryAction,
   makeStyles
 } from '@material-ui/core';
+import clsx from 'clsx';
 import Modal, { ModalHeader } from '../../UI/Modal';
 import SearchBar from '../../UI/SearchBar';
 import { useChildren } from '../../../hooks/children';
@@ -80,6 +81,7 @@ const InviteModal = ({ open, onClose, cls, team }) => {
                       color="secondary"
                       disabled={wasInvited}
                       onClick={() => invite(child)}
+                      className={clsx({ [classes.emphasize]: !wasInvited })}
                     >
                       {wasInvited ? 'Invited' : 'Invite'}
                     </Button>
@@ -109,6 +111,9 @@ const useStyles = makeStyles({
   search: {
     width: '100%',
     margin: '10px 20px'
+  },
+  emphasize: {
+    padding: '5px 19.95px'
   }
 });
 
