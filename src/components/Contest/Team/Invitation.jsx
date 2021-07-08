@@ -25,12 +25,15 @@ const defaultProps = {
   last: false
 };
 
-const Invitation = ({ invite: { teamId }, first, last }) => {
+const Invitation = ({ invite: { accepted, ref, teamId }, first, last }) => {
   const teamRef = useMemo(() => db.collection('contestTeams').doc(teamId), [teamId]);
   const team = useLiveTeamData(teamRef);
   const ownerRef = useMemo(() => (team?.members.length > 0 ? team.members[0] : null));
   const [owner] = useChild(ownerRef);
   const classes = useStyles();
+
+  const joinTeam = () => ref.update({ accepted: true });
+
   return (
     <ListItem
       divider={!last}
@@ -47,7 +50,13 @@ const Invitation = ({ invite: { teamId }, first, last }) => {
         </Typography>
       </ListItemText>
       <ListItemSecondaryAction>
-        <Button color="secondary" variant="outlined" startIcon={<Check />}>
+        <Button
+          color="secondary"
+          variant="outlined"
+          disabled={accepted}
+          startIcon={<Check />}
+          onClick={joinTeam}
+        >
           Join
         </Button>
       </ListItemSecondaryAction>
