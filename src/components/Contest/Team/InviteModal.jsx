@@ -45,6 +45,7 @@ const InviteModal = ({ open, onClose, cls, team }) => {
   const invite = child => {
     if (team !== null) {
       const data = {
+        classId: cls.id,
         childId: child.id,
         parentId: child.parent.id,
         ownerId: team.teamOwner,
