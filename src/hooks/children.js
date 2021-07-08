@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { getDataEffectBase, onSnapshotDataEffectBase } from '../utils/effectBases';
 import { useAccountRef } from './accounts';
+import { toData } from '../utils/helpers';
+import { db } from '../utils/firebase';
 
 /* ======================
  * === Children Hooks ===
@@ -61,6 +63,17 @@ export const useParentsLiveChildren = () => {
   return children;
 };
 
+/**
+ * Subscribe to the data of all invites for a child.
+ */
+export const useLiveChildInvites = id => {
+  const [invites, setInvites] = useState([]);
+  const refs = useMemo(() => db.collection('contestTeamInvites').where('childId', '==', id), [id]);
+  const handleError = () => setInvites([]);
+  useEffect(liveInvitesDataEffect(refs, setInvites, handleError), [refs]);
+  return invites;
+};
+
 /* ===============================
  * === Custom Reusable Effects ===
  * =============================== */
@@ -69,3 +82,4 @@ const childrenDataEffect = getDataEffectBase(false);
 const liveChildDataEffect = onSnapshotDataEffectBase(true);
 const liveChildrenDataEffect = onSnapshotDataEffectBase(false);
 const parentChildRefsEffect = onSnapshotDataEffectBase(true, doc => doc.data().children || []);
+const liveInvitesDataEffect = onSnapshotDataEffectBase(true, snap => snap.docs.map(toData));
