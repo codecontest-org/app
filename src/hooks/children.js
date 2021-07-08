@@ -9,6 +9,20 @@ import { db } from '../utils/firebase';
  * ====================== */
 
 /**
+ * Get the data of the given child reference.
+ */
+export const useChild = childRef => {
+  const [child, setChild] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const handleError = () => {
+    setChild(null);
+    setLoading(false);
+  };
+  useEffect(childDataEffect(childRef, setChild, setLoading, handleError), [childRef]);
+  return [child, loading];
+};
+
+/**
  * Subscribe to the data of a given child reference.
  */
 export const useLiveChild = childRef => {
@@ -87,6 +101,7 @@ export const useLiveChildInvites = (childId, classId) => {
  * === Custom Reusable Effects ===
  * =============================== */
 
+const childDataEffect = getDataEffectBase(true);
 const childrenDataEffect = getDataEffectBase(false);
 const liveChildDataEffect = onSnapshotDataEffectBase(true);
 const liveChildrenDataEffect = onSnapshotDataEffectBase(false);
