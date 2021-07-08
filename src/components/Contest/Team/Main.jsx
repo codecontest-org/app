@@ -24,8 +24,8 @@ const MainScreen = ({ cls, whoAmI, updateToggles }) => {
   const invitations =
     invites.length > 0 ? (
       <List className={classes.invites}>
-        {invites.map(i => (
-          <Invitation key={i.id} invite={i} />
+        {invites.map((inv, i) => (
+          <Invitation key={inv.id} invite={inv} first={i === 0} last={i === invites.length - 1} />
         ))}
       </List>
     ) : null;
@@ -68,8 +68,7 @@ const useStyles = makeStyles({
   },
   invites: {
     width: '100%',
-    marginTop: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)'
+    marginTop: 20
   }
 });
 
