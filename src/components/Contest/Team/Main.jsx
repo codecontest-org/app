@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
@@ -9,21 +9,20 @@ const propTypes = {
   whoAmI: PropTypes.object,
   updateToggles: PropTypes.func.isRequired
 };
+
 const defaultProps = {
   whoAmI: null
 };
 
 const MainScreen = ({ whoAmI, updateToggles }) => {
   const invites = useLiveChildInvites(whoAmI?.id);
-
-  useEffect(() => console.log(invites), [invites]);
-
   const classes = useStyles();
   return (
     <Paper className={clsx([classes.paper, classes.centerCol])}>
       <Typography variant="h3" align="center">
         Join a Team
       </Typography>
+      <Invites invites={invites} />
       <Button
         variant="contained"
         color="primary"
@@ -38,6 +37,16 @@ const MainScreen = ({ whoAmI, updateToggles }) => {
 };
 MainScreen.propTypes = propTypes;
 MainScreen.defaultProps = defaultProps;
+
+const Invites = ({ invites }) => {
+  console.log(invites);
+  return invites.map(invite => (
+    <Typography key={invite.id} variant="body1">
+      You have an invite!
+    </Typography>
+  ));
+};
+Invites.propTypes = { invites: PropTypes.array.isRequired };
 
 const useStyles = makeStyles({
   paper: {
