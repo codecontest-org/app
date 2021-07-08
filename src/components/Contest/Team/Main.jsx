@@ -4,6 +4,7 @@ import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
 import { useLiveChildInvites } from '../../../hooks/children';
+import Invitation from './Invitation';
 
 const propTypes = {
   cls: PropTypes.object,
@@ -24,7 +25,9 @@ const MainScreen = ({ cls, whoAmI, updateToggles }) => {
       <Typography variant="h3" align="center">
         Join a Team
       </Typography>
-      <Invites invites={invites} />
+      {invites.map(i => (
+        <Invitation key={i.id} invite={i} />
+      ))}
       <Button
         variant="contained"
         color="primary"
@@ -39,16 +42,6 @@ const MainScreen = ({ cls, whoAmI, updateToggles }) => {
 };
 MainScreen.propTypes = propTypes;
 MainScreen.defaultProps = defaultProps;
-
-const Invites = ({ invites }) => {
-  console.log(invites);
-  return invites.map(invite => (
-    <Typography key={invite.id} variant="body1">
-      You have an invite!
-    </Typography>
-  ));
-};
-Invites.propTypes = { invites: PropTypes.array.isRequired };
 
 const useStyles = makeStyles({
   paper: {
