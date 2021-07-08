@@ -66,9 +66,18 @@ export const useParentsLiveChildren = () => {
 /**
  * Subscribe to the data of all invites for a child.
  */
-export const useLiveChildInvites = id => {
+export const useLiveChildInvites = (childId, classId) => {
   const [invites, setInvites] = useState([]);
-  const refs = useMemo(() => db.collection('contestTeamInvites').where('childId', '==', id), [id]);
+  const refs = useMemo(
+    () =>
+      childId && classId
+        ? db
+            .collection('contestTeamInvites')
+            .where('childId', '==', childId)
+            .where('classId', '==', classId)
+        : null,
+    [childId, classId]
+  );
   const handleError = () => setInvites([]);
   useEffect(liveInvitesDataEffect(refs, setInvites, handleError), [refs]);
   return invites;

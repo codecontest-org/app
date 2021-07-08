@@ -6,16 +6,18 @@ import clsx from 'clsx';
 import { useLiveChildInvites } from '../../../hooks/children';
 
 const propTypes = {
+  cls: PropTypes.object,
   whoAmI: PropTypes.object,
   updateToggles: PropTypes.func.isRequired
 };
 
 const defaultProps = {
+  cls: null,
   whoAmI: null
 };
 
-const MainScreen = ({ whoAmI, updateToggles }) => {
-  const invites = useLiveChildInvites(whoAmI?.id);
+const MainScreen = ({ cls, whoAmI, updateToggles }) => {
+  const invites = useLiveChildInvites(whoAmI?.id, cls?.id);
   const classes = useStyles();
   return (
     <Paper className={clsx([classes.paper, classes.centerCol])}>

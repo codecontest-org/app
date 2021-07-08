@@ -82,7 +82,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
   if (toggles.showCreate)
     return <CreateScreen whoAmI={whoAmI} cls={cls} updateToggles={updateToggles} />;
 
-  return <MainScreen whoAmI={whoAmI} updateToggles={updateToggles} />;
+  return <MainScreen whoAmI={whoAmI} cls={cls} updateToggles={updateToggles} />;
 };
 ContestTeam.propTypes = propTypes;
 ContestTeam.defaultProps = defaultProps;
