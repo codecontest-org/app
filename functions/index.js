@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const stripe = require('./stripe');
+const teams = require('./teams');
 
 /* =====================
  * == Stripe Payments ==
@@ -28,3 +29,12 @@ exports.retryStripeSellerAccount = functions.firestore
 exports.deleteStripeSellerAccount = functions.firestore
   .document('/env/{env}/stripeSellers/{sellerId}')
   .onDelete(stripe.sellers.disconnect);
+
+/* ======================
+ * == Team Invitations ==
+ * ====================== */
+
+// Handle Answer.
+exports.handleInvitationAnswer = functions.firestore
+  .document('/env/{env}/contestTeamInvites/{inviteId}')
+  .onUpdate(teams.invites.handleAnswer);
