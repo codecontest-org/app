@@ -25,7 +25,7 @@ yarn-error.log*
 
 # firebase
 /.firebase
-firebase-debug.log
+*.log
 
 # Vim
 *.swp
