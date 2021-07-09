@@ -1,10 +1,9 @@
 const admin = require('firebase-admin');
 
+// Initialize app.
+admin.initializeApp();
+
 /**
- * Get an admin firestore instance.
+ * Get a firestore reference.
  */
-exports.getDB = ({ params: { env } }) =>
-  admin
-    .firestore()
-    .collection('env')
-    .doc(env);
+exports.getRef = ({ params: { env } }, path) => admin.firestore().doc(`env/${env}/${path}`);
