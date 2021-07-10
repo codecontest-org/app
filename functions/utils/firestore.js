@@ -72,8 +72,7 @@ async function setupMockData(env) {
   }
 }
 
-if (process.env.NODE_ENV === 'production') console.log('This is legit!!');
-else setupMockData('DEVELOPMENT');
+if (process.env.MOCK_DATA) setupMockData('DEVELOPMENT');
 
 /**
  * Get a firestore reference.
