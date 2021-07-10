@@ -17,6 +17,25 @@ export const useLiveTeamData = ref => {
 };
 
 /**
+ * Get a reference to a team in a given
+ * class with a given child as a member.
+ */
+export const useLiveChildsTeamData = (childRef, classRef) => {
+  const [team, setTeam] = useState(null);
+  const teamRef = useMemo(
+    () =>
+      db
+        .collection('contestTeams')
+        .where('members', 'array-contains', childRef)
+        .where('classRef', '==', classRef),
+    [childRef, classRef]
+  );
+  const handleError = () => setTeam(null);
+  useEffect(liveChildsTeamDataEffect(teamRef, setTeam, handleError), [teamRef]);
+  return team;
+};
+
+/**
  * Subscribe to the data of all invites for a team.
  */
 export const useLiveTeamInvites = id => {
@@ -32,4 +51,7 @@ export const useLiveTeamInvites = id => {
  * =============================== */
 
 const liveTeamDataEffect = onSnapshotDataEffectBase(true);
+const liveChildsTeamDataEffect = onSnapshotDataEffectBase(true, snap =>
+  snap.empty ? null : toData(snap.docs[0])
+);
 const liveInvitesDataEffect = onSnapshotDataEffectBase(true, snap => snap.docs.map(toData));

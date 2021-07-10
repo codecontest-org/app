@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useLiveChild } from '../../../hooks/children';
-import { useLiveTeamData } from '../../../hooks/teams';
+import { useLiveChildsTeamData } from '../../../hooks/teams';
 
 import CreateScreen from './Create';
 import MainScreen from './Main';
@@ -28,15 +28,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
   });
   const updateToggles = newToggles => setToggles({ ...toggles, ...newToggles });
 
-  const teamRef = useMemo(() => {
-    const myTeams = whoAmI?.teams;
-    if (myTeams) {
-      const team = myTeams[cls?.id];
-      if (team) return team;
-    }
-    return null;
-  }, [whoAmI]);
-  const team = useLiveTeamData(teamRef);
+  const team = useLiveChildsTeamData(whoAmI?.ref, cls?.ref);
 
   const ownerRef = useMemo(() => (team && team.members.length > 0 ? team.members[0] : null), [
     team
@@ -56,7 +48,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
           </Typography>
           <InfoItem title="Name">{team.name}</InfoItem>
           <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
-          <ReplUI team={team} teamRef={teamRef} />
+          <ReplUI team={team} teamRef={team?.ref} />
           {iAmOwner && (
             <Button
               variant="contained"
