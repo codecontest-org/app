@@ -4,6 +4,9 @@ const { Child, Class, Parent, Reference, Team, TeamInvite } = require('./mockDat
 // Initialize app.
 admin.initializeApp();
 
+// TODO: Figure out how to use a dotenv file with local functions.
+// That way I can test out the stripe functions locally.
+
 /**
  * Load Mock Firestore Data. This data can be
  * used to test out cloud functions locally.
