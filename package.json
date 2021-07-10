@@ -34,6 +34,7 @@
   "scripts": {
     "start": "react-app-rewired -r dotenv/config start",
     "build": "react-app-rewired -r dotenv/config build",
+    "firebase": "firebase emulators:start --only functions,firestore",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
