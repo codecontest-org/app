@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { useAccountRef } from '../../../hooks/accounts';
-import { toData } from '../../../utils/helpers';
 import { db } from '../../../utils/firebase';
 
 const propTypes = {
@@ -38,24 +37,13 @@ const CreateScreen = ({ whoAmI, cls, updateToggles }) => {
         classRef: cls?.ref
       };
       setError('');
-      const newTeamRef = db.collection('contestTeams').doc();
-      await newTeamRef.set(data);
-      joinTeam(newTeamRef);
+      await db
+        .collection('contestTeams')
+        .doc()
+        .set(data);
     } else {
       setError('Failed to create team.');
     }
-  };
-
-  const joinTeam = async ref => {
-    const childData = toData(await whoAmI.ref.get());
-    const teamEntry = { [cls.id]: ref };
-    let childTeams = childData.teams;
-    if (childTeams) {
-      childTeams = { ...childTeams, ...teamEntry };
-    } else {
-      childTeams = teamEntry;
-    }
-    whoAmI.ref.update({ teams: childTeams });
   };
 
   return (
