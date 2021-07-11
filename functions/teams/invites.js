@@ -16,6 +16,8 @@ async function handleAnswer({ before, after }, context) {
       members.push(childRef);
       teamRef.update({ members });
     }
+    // Delete completed invitation.
+    after.ref.delete();
   }
 }
 
