@@ -72,12 +72,18 @@ class Person extends Doc {
 class Child extends Person {
   constructor(fName, lName, parent) {
     super(fName, lName);
+    this.classes = [];
+    this.tutorials = [];
     this.birthDate = new Date(Date.now() - 8 * aYear);
     this.currentGrade = 'pk';
     this.currentSchool = 'test school';
     this.gender = 'other';
     this.shirtSize = 'axl';
     this.parent = parent;
+  }
+
+  addClass(cls) {
+    this.classes.push(cls);
   }
 }
 

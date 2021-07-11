@@ -33,6 +33,9 @@ function loadMockData() {
   // Add Children to Classes.
   classes[0].addChild(new Reference({ children }, 0));
   classes[0].addChild(new Reference({ children }, 1));
+  // Add Classes to Children.
+  children[0].addClass(new Reference({ classes }, 0));
+  children[1].addClass(new Reference({ classes }, 0));
   // Add Classes to Teachers.
   teachers[0].addClass(new Reference({ classes }, 0));
 
