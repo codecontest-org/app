@@ -61,6 +61,11 @@ service cloud.firestore {
         allow delete: if resource.data.ownerId == request.auth.uid;
       }
 
+      match /contestTeamQuitters/{quitter} {
+        allow read, write: if false;
+        allow create: if get(resource.data.childRef).data.parent.id == request.auth.uid;
+      }
+
       // Account Types
       match /organizations/{organization} {
         allow create: if request.auth.uid != null;
