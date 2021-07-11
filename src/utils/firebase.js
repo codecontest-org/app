@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/functions';
 import 'firebase/storage';
 import 'firebase/auth';
 
@@ -15,8 +16,15 @@ const config = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-console.log('DEV_ENV:', process.env.REACT_APP_DEV_ENV);
 firebase.initializeApp(config);
+
+// Connect to local firebase emulators.
+if (process.env.REACT_APP_DEV_ENV) {
+  firebase.firestore().settings({ host: 'localhost:8080', ssl: false });
+  firebase.functions().useFunctionsEmulator('http://localhost:5001');
+  firebase.storage().useEmulator('localhost', 9199);
+}
+
 export const { Timestamp } = firebase.firestore;
 export const { GoogleAuthProvider } = firebase.auth;
 export const db = firebase
