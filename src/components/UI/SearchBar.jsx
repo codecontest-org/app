@@ -31,7 +31,7 @@ const SearchBar = ({ handleSearch, classes }) => {
         disableUnderline
         fullWidth
         endAdornment={
-          <InputAdornment>
+          <InputAdornment position="end">
             <Search />
           </InputAdornment>
         }

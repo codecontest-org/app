@@ -134,7 +134,7 @@ const GamesInterface = ({ useCustomAppBar, width, whoAmI, setWhoAmI }) => {
   return (
     <>
       <Container maxWidth="md" className={classes.content}>
-        <Grid container direction="row" justify="flex-start" align="center" spacing={3}>
+        <Grid container direction="row" justifyContent="flex-start" align="center" spacing={3}>
           {games.length === 0 ? (
             <Grid item xs={12} className={classes.blank}>
               <Typography variant="h4" color="textPrimary" align="left">
