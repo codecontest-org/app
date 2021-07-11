@@ -15,6 +15,7 @@ const config = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
+console.log('DEV_ENV:', process.env.REACT_APP_DEV_ENV);
 firebase.initializeApp(config);
 export const { Timestamp } = firebase.firestore;
 export const { GoogleAuthProvider } = firebase.auth;
