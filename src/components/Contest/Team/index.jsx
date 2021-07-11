@@ -45,7 +45,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
         .doc()
         .set({
           teamRef: team.ref,
-          childId: whoAmI.id
+          childRef: whoAmI.ref
         });
     }
   };
