@@ -13,8 +13,11 @@ async function handleAnswer({ before, after }, context) {
       const teamRef = getRef(context, `contestTeams/${teamId}`);
       const teamDoc = await teamRef.get();
       const { members } = teamDoc.data();
-      members.push(childRef);
-      teamRef.update({ members });
+      if (members.filter(m => m.id === childId).length === 0) {
+        members.push(childRef);
+        await teamRef.update({ members });
+        console.log('Successfully added new team member!', childId);
+      } else console.error('Failed to add duplicate team member!');
     }
     // Delete completed invitation.
     after.ref.delete();
