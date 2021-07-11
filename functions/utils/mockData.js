@@ -7,6 +7,12 @@
 
 const { v4: uuid } = require('uuid');
 
+const aMinute = 60000;
+const anHour = aMinute * 60;
+const aDay = anHour * 24;
+const aWeek = aDay * 7;
+const aYear = aWeek * 52;
+
 /**
  * Mock Data Reference -> Firestore Reference.
  */
@@ -66,7 +72,7 @@ class Person extends Doc {
 class Child extends Person {
   constructor(fName, lName, parent) {
     super(fName, lName);
-    this.birthDate = new Date(Date.now());
+    this.birthDate = new Date(Date.now() - 8 * aYear);
     this.currentGrade = 'pk';
     this.currentSchool = 'test school';
     this.gender = 'other';
@@ -101,7 +107,7 @@ class Teacher extends Doc {
     super();
     this.address = address;
     this.classes = [];
-    this.dateApplied = new Date(Date.now());
+    this.dateApplied = new Date(Date.now() - anHour);
     this.isDeclined = false;
     this.isRead = false;
     this.isTraining = false;
@@ -133,8 +139,8 @@ class Class extends Doc {
     this.daysOfWeek = ['Mon', 'Wed', 'Fri'];
     this.description = 'This is a test class.';
     this.endAge = 18;
-    this.endDate = new Date(Date.now());
-    this.endTime = new Date(Date.now());
+    this.endDate = new Date(Date.now() + aDay);
+    this.endTime = new Date(Date.now() + anHour);
     this.hasWaiver = false;
     this.isPrivate = false;
     this.locationAddress = '456 Test Ln. Chicago IL';
@@ -145,8 +151,8 @@ class Class extends Doc {
     this.privacyCode = '';
     this.programType = 'contest';
     this.startAge = 10;
-    this.startDate = new Date(Date.now());
-    this.startTime = new Date(Date.now());
+    this.startDate = new Date(Date.now() - aDay);
+    this.startTime = new Date(Date.now() - anHour);
     this.teacher = teacher;
     this.waiverURL = '';
   }
