@@ -31,6 +31,10 @@ class Doc {
     this.id = uuid();
   }
 
+  setId(newId) {
+    this.id = newId;
+  }
+
   toJSON(fs, env) {
     const out = {};
     Object.entries(this).forEach(([key, value]) => {
@@ -77,10 +81,44 @@ class Child extends Person {
 class Parent extends Person {
   constructor(fName, lName) {
     super(fName, lName);
+    this.children = [];
     this.email = 'test@email.com';
     this.phone = '123-123-1234';
     this.canText = true;
     this.address = '123 Test Ln. Chicago IL';
+  }
+
+  addChild(kid) {
+    this.children.push(kid);
+  }
+}
+
+/**
+ * A document in the teachers collection.
+ */
+class Teacher extends Doc {
+  constructor(address) {
+    super();
+    this.address = address;
+    this.classes = [];
+    this.dateApplied = new Date(Date.now());
+    this.isDeclined = false;
+    this.isRead = false;
+    this.isTraining = false;
+    this.isVerrified = true;
+    this.location = 'school';
+    this.prevExp = 'Lots and lots...';
+    this.promos = [];
+    this.region = 'New York, NY';
+    this.whyTeach = 'Because I want to!';
+  }
+
+  addClass(cls) {
+    this.classes.push(cls);
+  }
+
+  addPromo(promo) {
+    this.promos.push(promo);
   }
 }
 
@@ -88,7 +126,7 @@ class Parent extends Person {
  * A document in the classes collection.
  */
 class Class extends Doc {
-  constructor(name) {
+  constructor(name, teacher) {
     super();
     this.name = name;
     this.children = [];
@@ -109,6 +147,7 @@ class Class extends Doc {
     this.startAge = 10;
     this.startDate = new Date(Date.now());
     this.startTime = new Date(Date.now());
+    this.teacher = teacher;
     this.waiverURL = '';
   }
 
@@ -153,4 +192,4 @@ class TeamInvite extends Doc {
   }
 }
 
-module.exports = { Reference, Child, Parent, Class, Team, TeamInvite };
+module.exports = { Reference, Child, Parent, Teacher, Class, Team, TeamInvite };
