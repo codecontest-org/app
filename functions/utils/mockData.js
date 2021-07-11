@@ -175,7 +175,7 @@ class Team extends Doc {
   constructor(name, cls) {
     super();
     this.name = name;
-    this.class = cls;
+    this.classRef = cls;
     this.members = [];
     this.replURL = 'https://replit.com/@macuyler/zombe-test-june8';
     this.teamOwner = 'me!';
@@ -197,7 +197,7 @@ class TeamInvite extends Doc {
   constructor(kid, team) {
     super();
     this.childId = kid.id;
-    this.classId = team.class.get().id;
+    this.classId = team.classRef.get().id;
     this.ownerId = team.teamOwner;
     this.parentId = kid.parent.get().id;
     this.teamId = team.id;
