@@ -4,6 +4,7 @@ import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
 import { Add, Clear } from '@material-ui/icons';
 import { useLiveChild } from '../../../hooks/children';
 import { useLiveChildsTeamData } from '../../../hooks/teams';
+import { db } from '../../../utils/firebase';
 
 import CreateScreen from './Create';
 import MainScreen from './Main';
@@ -37,6 +38,17 @@ const ContestTeam = ({ whoAmI, cls }) => {
   ]);
   const owner = useLiveChild(ownerRef);
   const iAmOwner = owner && owner?.id === whoAmI?.id;
+
+  const leaveTeam = () => {
+    if (team && owner && whoAmI && !iAmOwner) {
+      db.collection('contstTeamQuitters')
+        .doc()
+        .set({
+          teamRef: team.ref,
+          childId: whoAmI.id
+        });
+    }
+  };
 
   const classes = useStyles();
 
@@ -75,7 +87,11 @@ const ContestTeam = ({ whoAmI, cls }) => {
           open={toggles.showInviteModal}
           onClose={() => updateToggles({ showInviteModal: false })}
         />
-        <LeaveModal open={toggles.showLeave} onClose={() => updateToggles({ showLeave: false })} />
+        <LeaveModal
+          open={toggles.showLeave}
+          onConfirm={leaveTeam}
+          onClose={() => updateToggles({ showLeave: false })}
+        />
       </>
     );
   }
