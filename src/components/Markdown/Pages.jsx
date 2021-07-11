@@ -31,10 +31,10 @@ import {
 
 const propTypes = {
   useCustomAppBar: PropTypes.func.isRequired,
-  useCurrentPage: PropTypes.func.isRequired,
   width: PropTypes.string.isRequired,
   pages: PropTypes.object.isRequired,
   useSelectedCls: PropTypes.func,
+  useCurrentPage: PropTypes.func,
   homePage: PropTypes.string,
   whiteList: PropTypes.string,
   whoAmI: PropTypes.object,
@@ -56,6 +56,7 @@ const defaultProps = {
   firstPrev: null,
   lastNext: null,
   useSelectedCls: () => [null],
+  useCurrentPage: () => [null, () => {}],
   includes: {}
 };
 
