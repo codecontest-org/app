@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Paper, Typography, makeStyles } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add, Clear } from '@material-ui/icons';
 import { useLiveChild } from '../../../hooks/children';
 import { useLiveChildsTeamData } from '../../../hooks/teams';
 
@@ -10,6 +10,7 @@ import MainScreen from './Main';
 import ReplUI from './Repl';
 import InfoItem from './Item';
 import InviteModal from './InviteModal';
+import LeaveModal from './LeaveModal';
 
 const propTypes = {
   whoAmI: PropTypes.object,
@@ -24,6 +25,7 @@ const defaultProps = {
 const ContestTeam = ({ whoAmI, cls }) => {
   const [toggles, setToggles] = useState({
     showCreate: false,
+    showLeave: false,
     showInviteModal: false
   });
   const updateToggles = newToggles => setToggles({ ...toggles, ...newToggles });
@@ -38,6 +40,14 @@ const ContestTeam = ({ whoAmI, cls }) => {
 
   const classes = useStyles();
 
+  const buttonConf = iAmOwner
+    ? {
+        title: 'Invite Members',
+        onClick: () => updateToggles({ showInviteModal: true }),
+        icon: <Add />
+      }
+    : { title: 'Leave Team', onClick: () => updateToggles({ showLeave: true }), icon: <Clear /> };
+
   if (team !== null) {
     // Team Info Screen
     return (
@@ -49,17 +59,15 @@ const ContestTeam = ({ whoAmI, cls }) => {
           <InfoItem title="Name">{team.name}</InfoItem>
           <InfoItem title="Owner">{owner ? `${owner.fName} ${owner.lName}` : ''}</InfoItem>
           <ReplUI team={team} teamRef={team?.ref} />
-          {iAmOwner && (
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Add />}
-              className={classes.inviteButton}
-              onClick={() => updateToggles({ showInviteModal: true })}
-            >
-              Invite Members
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={buttonConf.icon}
+            className={classes.inviteButton}
+            onClick={buttonConf.onClick}
+          >
+            {buttonConf.title}
+          </Button>
         </Paper>
         <InviteModal
           cls={cls}
@@ -67,6 +75,7 @@ const ContestTeam = ({ whoAmI, cls }) => {
           open={toggles.showInviteModal}
           onClose={() => updateToggles({ showInviteModal: false })}
         />
+        <LeaveModal open={toggles.showLeave} onClose={() => updateToggles({ showLeave: false })} />
       </>
     );
   }
