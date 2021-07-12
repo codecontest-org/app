@@ -1,142 +1,82 @@
 const { assertFails } = require('@firebase/rules-unit-testing');
-const { testId, docId, userId } = require('./utils/ids');
-const { createAdminApp, createUserApp, User, cleanup } = require('./utils/users');
+const { TestSuiteHelper, UnitTestHelper } = require('./utils/helpers');
 
-const env = 'PRODUCTION';
-const name = 'admins';
-const email = 'admin@test.app';
-
-const tid = i => testId(name, i);
-const getDoc = (user, documentId) =>
-  user
-    .firestore()
-    .collection('env')
-    .doc(env)
-    .collection(name)
-    .doc(documentId);
+const suite = new TestSuiteHelper('admins', ['secret']);
 
 async function admins0000() {
   const about = 'Test read permissions for the admins collection.';
-  const id = tid(0);
-  const uid = i => userId(id, i);
-  const did = i => docId(id, i);
+  const test = new UnitTestHelper(0, about, suite);
+  const { admin, user0, anonymous } = test.createUsers();
+  const data = suite.randomData();
 
-  const admin = createAdminApp(id);
-  const user0 = createUserApp(id, new User(uid(0), email));
-  const user1 = createUserApp(id, null);
+  await suite.getDoc(admin, test.doc(0)).set(data);
 
-  const doc0 = did(0);
-  const data0 = { secret: 'super' };
-
-  // Load test data.
-  await getDoc(admin, doc0).set(data0);
-
-  let passed = true;
-  try {
+  await test.run(async () => {
     // Attempt to read a doc as an authenticated user.
-    await assertFails(getDoc(user0, doc0).get());
+    await assertFails(suite.getDoc(user0, test.doc(0)).get());
     // Attempt to read a doc as an unauthenticated user.
-    await assertFails(getDoc(user1, doc0).get());
-  } catch {
-    passed = false;
-  }
+    await assertFails(suite.getDoc(anonymous, test.doc(0)).get());
+  });
 
-  await cleanup(id, [admin, user0, user1]);
-
-  return [id, about, passed];
+  await test.cleanup();
+  return test.results();
 }
 
 async function admins0001() {
   const about = 'Test create permissions for the admins collection.';
-  const id = tid(1);
-  const uid = i => userId(id, i);
-  const did = i => docId(id, i);
+  const test = new UnitTestHelper(1, about, suite);
+  const { user0, anonymous } = test.createUsers(false);
+  const data = suite.randomData();
 
-  const user0 = createUserApp(id, new User(uid(0), email));
-  const user1 = createUserApp(id, null);
-
-  const doc0 = did(0);
-  const doc1 = did(1);
-  const data0 = { secret: 'duper' };
-
-  let passed = true;
-  try {
+  await test.run(async () => {
     // Attempt to create a doc as an authenticated user.
-    await assertFails(getDoc(user0, doc0).set(data0));
+    await assertFails(suite.getDoc(user0, test.doc(0)).set(data));
     // Attempt to create a doc as an unauthenticated user.
-    await assertFails(getDoc(user1, doc1).set(data0));
-  } catch {
-    passed = false;
-  }
+    await assertFails(suite.getDoc(anonymous, test.doc(1)).set(data));
+  });
 
-  await cleanup(id, [user0, user1]);
-
-  return [id, about, passed];
+  await test.cleanup();
+  return test.results();
 }
 
 async function admins0002() {
   const about = 'Test update permissions for the admins collection.';
-  const id = tid(2);
-  const uid = i => userId(id, i);
-  const did = i => docId(id, i);
+  const test = new UnitTestHelper(2, about, suite);
+  const { admin, user0, anonymous } = test.createUsers();
+  const data0 = suite.randomData();
+  const data1 = suite.randomData();
 
-  const admin = createAdminApp(id);
-  const user0 = createUserApp(id, new User(uid(0), email));
-  const user1 = createUserApp(id, null);
+  await suite.getDoc(admin, test.doc(0)).set(data0);
+  await suite.getDoc(admin, test.doc(1)).set(data0);
 
-  const doc0 = did(0);
-  const doc1 = did(1);
-  const data0 = { secret: 'looper' };
-  const data1 = { secret: 'change' };
-
-  // Load test data.
-  await getDoc(admin, doc0).set(data0);
-  await getDoc(admin, doc1).set(data0);
-
-  let passed = true;
-  try {
+  await test.run(async () => {
     // Attempt to update a doc as an authenticated user.
-    await assertFails(getDoc(user0, doc0).update(data1));
+    await assertFails(suite.getDoc(user0, test.doc(0)).update(data1));
     // Attempt to update a doc as an unauthenticated user.
-    await assertFails(getDoc(user1, doc1).update(data1));
-  } catch {
-    passed = false;
-  }
+    await assertFails(suite.getDoc(anonymous, test.doc(1)).update(data1));
+  });
 
-  await cleanup(id, [admin, user0, user1]);
-
-  return [id, about, passed];
+  await test.cleanup();
+  return test.results();
 }
 
 async function admins0003() {
   const about = 'Test delete permissions for the admins collection.';
-  const id = tid(3);
-  const uid = i => userId(id, i);
-  const did = i => docId(id, i);
+  const test = new UnitTestHelper(3, about, suite);
+  const { admin, user0, anonymous } = test.createUsers();
+  const data = suite.randomData();
 
-  const admin = createAdminApp(id);
-  const user0 = createUserApp(id, new User(uid(0), email));
-  const user1 = createUserApp(id, null);
+  await suite.getDoc(admin, test.doc(0)).set(data);
 
-  const doc0 = did(0);
-  const data0 = { secret: 'scooper' };
-
-  // Load test data.
-  await getDoc(admin, doc0).set(data0);
-
-  let passed = true;
-  try {
+  await test.run(async () => {
     // Attempt to delete a doc as an authenticated user.
-    await assertFails(getDoc(user0, doc0).delete());
+    await assertFails(suite.getDoc(user0, test.doc(0)).delete());
     // Attempt to delete a doc as an unauthenticated user.
-    await assertFails(getDoc(user1, doc0).delete());
-  } catch {
-    passed = false;
-  }
+    await assertFails(suite.getDoc(anonymous, test.doc(0)).delete());
+  });
 
-  await cleanup(id, [admin, user0, user1]);
-
-  return [id, about, passed];
+  await test.cleanup();
+  return test.results();
 }
 
 module.exports = [admins0000, admins0001, admins0002, admins0003];
