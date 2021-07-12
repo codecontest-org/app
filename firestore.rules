@@ -9,12 +9,6 @@ service cloud.firestore {
 
     // TODO: Add isTeacher/Organization functions for account type specific creates.
 
-    match /env/{env}/{document=**} {
-      // Default document rules.
-      allow read: if request.auth.uid != null;
-      allow write: if false;
-    }
-
     match /env/{env} { // PRODUCTION or DEVELOPMENT
 
       match /admins/{admin} {
@@ -22,7 +16,7 @@ service cloud.firestore {
       }
 
       match /children/{child} {
-        allow write: if request.auth.uid != null;
+        allow read, write: if request.auth.uid != null;
       }
 
       match /classes/{class} {
@@ -68,18 +62,18 @@ service cloud.firestore {
 
       // Account Types
       match /organizations/{organization} {
-        allow create: if request.auth.uid != null;
+        allow read, create: if request.auth.uid != null;
         allow write: if request.auth.uid == resource.id;
         allow update: if isAdmin(env);
       }
 
       match /parents/{parent} {
-        allow create: if request.auth.uid != null;
+        allow read, create: if request.auth.uid != null;
         allow write: if request.auth.uid == resource.id;
       }
 
       match /teachers/{teacher} {
-        allow create: if request.auth.uid != null;
+        allow read, create: if request.auth.uid != null;
         allow write: if request.auth.uid == resource.id;
         allow update: if isAdmin(env);
       }
