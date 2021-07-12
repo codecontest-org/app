@@ -10,8 +10,9 @@
  */
 
 const admins = require('./admins');
+const parents = require('./parents');
 
-const testSuites = { admins };
+const testSuites = { admins, parents };
 
 async function runAllTests() {
   console.log('[*] Running Firestore Rules Tests...\n');
@@ -37,7 +38,7 @@ async function runAllTests() {
     grandTotal += total;
     numOfTests += suite.length;
   });
-  console.log(`\nPassing Tests: (${grandTotal}/${numOfTests})`);
+  console.log(`\nPassing Tests: (${grandTotal}/${numOfTests})\n`);
 }
 
 runAllTests();
