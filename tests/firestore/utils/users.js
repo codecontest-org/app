@@ -63,6 +63,14 @@ function createUserApp(projectId, user) {
   throw new InvalidUserError();
 }
 
-const methods = { createAdminApp, createUserApp };
+/**
+ * Clear test data and delete test firebase apps.
+ */
+async function cleanup(projectId, users) {
+  await firebase.clearFirestoreData({ projectId });
+  await Promise.all(users.map(u => u.delete()));
+}
+
+const methods = { createAdminApp, createUserApp, cleanup };
 
 module.exports = { ...methods, ...errors, ...schemas };

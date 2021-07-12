@@ -1,6 +1,6 @@
 const { assertFails } = require('@firebase/rules-unit-testing');
 const { testId, docId, userId } = require('./utils/ids');
-const { createAdminApp, createUserApp, User } = require('./utils/users');
+const { createAdminApp, createUserApp, User, cleanup } = require('./utils/users');
 
 const env = 'PRODUCTION';
 const name = 'admins';
@@ -41,6 +41,8 @@ async function admins0000() {
     passed = false;
   }
 
+  await cleanup(id, [admin, user0, user1]);
+
   return [id, about, passed];
 }
 
@@ -54,6 +56,7 @@ async function admins0001() {
   const user1 = createUserApp(id, null);
 
   const doc0 = did(0);
+  const doc1 = did(1);
   const data0 = { secret: 'duper' };
 
   let passed = true;
@@ -61,10 +64,12 @@ async function admins0001() {
     // Attempt to create a doc as an authenticated user.
     await assertFails(getDoc(user0, doc0).set(data0));
     // Attempt to create a doc as an unauthenticated user.
-    await assertFails(getDoc(user1, doc0).set(data0));
+    await assertFails(getDoc(user1, doc1).set(data0));
   } catch {
     passed = false;
   }
+
+  await cleanup(id, [user0, user1]);
 
   return [id, about, passed];
 }
@@ -96,6 +101,8 @@ async function admins0002() {
     passed = false;
   }
 
+  await cleanup(id, [admin, user0, user1]);
+
   return [id, about, passed];
 }
 
@@ -124,6 +131,8 @@ async function admins0003() {
   } catch {
     passed = false;
   }
+
+  await cleanup(id, [admin, user0, user1]);
 
   return [id, about, passed];
 }
