@@ -52,7 +52,15 @@ class UnitTestHelper {
     return docId(this.id, i);
   }
 
-  createUsers(admin = true, user0 = true, user1 = false, user2 = false, anonymous = true) {
+  createUsers(toggles) {
+    const defaultToggles = {
+      admin: true,
+      user0: true,
+      user1: false,
+      user2: false,
+      anonymous: true
+    };
+    const { admin, user0, user1, user2, anonymous } = { ...defaultToggles, ...toggles };
     if (this.users === null) {
       const users = {};
       const createAuthed = i => createUserApp(this.id, new User(this.user(i), this.suite.email));
@@ -67,11 +75,12 @@ class UnitTestHelper {
     return this.users;
   }
 
-  async run(assertions) {
+  async run(assertions, handleError) {
     try {
       await assertions();
-    } catch {
+    } catch (error) {
       this.passed = false;
+      handleError(error);
     }
     this.wasRun = true;
   }

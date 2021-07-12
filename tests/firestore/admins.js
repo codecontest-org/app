@@ -25,7 +25,7 @@ async function admins0000() {
 async function admins0001() {
   const about = 'Test create permissions for the admins collection.';
   const test = new UnitTestHelper(1, about, suite);
-  const { user0, anonymous } = test.createUsers(false);
+  const { user0, anonymous } = test.createUsers({ admin: false });
   const data = suite.randomData();
 
   await test.run(async () => {

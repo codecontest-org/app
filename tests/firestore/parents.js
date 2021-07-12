@@ -25,7 +25,7 @@ async function parents0000() {
 async function parents0001() {
   const about = 'Test create permissions for the parents collection.';
   const test = new UnitTestHelper(1, about, suite);
-  const { user0, anonymous } = test.createUsers(false);
+  const { user0, anonymous } = test.createUsers({ admin: false });
   const data = suite.randomData();
 
   await test.run(async () => {
@@ -42,7 +42,7 @@ async function parents0001() {
 async function parents0002() {
   const about = 'Test update permissions for the parents collection.';
   const test = new UnitTestHelper(2, about, suite);
-  const { admin, user0, user1, anonymous } = test.createUsers(true, true, true);
+  const { admin, user0, user1, anonymous } = test.createUsers({ user1: true });
   const data0 = suite.randomData();
   const data1 = suite.randomData();
 
@@ -66,7 +66,7 @@ async function parents0002() {
 async function parents0003() {
   const about = 'Test delete permissions for the parents collection.';
   const test = new UnitTestHelper(3, about, suite);
-  const { admin, user0, user1, anonymous } = test.createUsers(true, true, true);
+  const { admin, user0, user1, anonymous } = test.createUsers({ user1: true });
   const data = { fName: 'Dante', lName: 'Dunn' };
 
   await suite.getDoc(admin, test.user(0)).set(data);
