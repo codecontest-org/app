@@ -14,7 +14,7 @@ async function admins0000() {
   await test.run(async () => {
     // Attempt to read a doc as an authenticated user.
     await assertFails(suite.getDoc(user0, test.doc(0)).get());
-    // Attempt to read a doc as an unauthenticated user.
+    // Attempt to read a doc as an anonymous user.
     await assertFails(suite.getDoc(anonymous, test.doc(0)).get());
   });
 
@@ -31,7 +31,7 @@ async function admins0001() {
   await test.run(async () => {
     // Attempt to create a doc as an authenticated user.
     await assertFails(suite.getDoc(user0, test.doc(0)).set(data));
-    // Attempt to create a doc as an unauthenticated user.
+    // Attempt to create a doc as an anonymous user.
     await assertFails(suite.getDoc(anonymous, test.doc(1)).set(data));
   });
 
@@ -52,7 +52,7 @@ async function admins0002() {
   await test.run(async () => {
     // Attempt to update a doc as an authenticated user.
     await assertFails(suite.getDoc(user0, test.doc(0)).update(data1));
-    // Attempt to update a doc as an unauthenticated user.
+    // Attempt to update a doc as an anonymous user.
     await assertFails(suite.getDoc(anonymous, test.doc(1)).update(data1));
   });
 
@@ -71,7 +71,7 @@ async function admins0003() {
   await test.run(async () => {
     // Attempt to delete a doc as an authenticated user.
     await assertFails(suite.getDoc(user0, test.doc(0)).delete());
-    // Attempt to delete a doc as an unauthenticated user.
+    // Attempt to delete a doc as an anonymous user.
     await assertFails(suite.getDoc(anonymous, test.doc(0)).delete());
   });
 
