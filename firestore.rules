@@ -2,9 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Get a document.
+    function getDoc(env, collection, document) {
+      return get(/databases/$(database)/documents/env/$(env)/$(collection)/$(document));
+    }
+
+    // Check Admin Privileges.
     function isAdmin(env) {
-      // Check Admin Privileges.
-      return get(/databases/$(database)/documents/env/$(env)/admins/$(request.auth.uid)).data.secret == "!_xEqyCw3Y.6*wrW32EkCz6GUUn7";
+      return getDoc(env, "admins", request.auth.uid).data.secret == "!_xEqyCw3Y.6*wrW32EkCz6GUUn7";
     }
 
     // TODO: Add isTeacher/Organization functions for account type specific creates.
