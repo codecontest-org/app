@@ -75,7 +75,7 @@ class UnitTestHelper {
     return this.users;
   }
 
-  async run(assertions, handleError) {
+  async run(assertions, handleError = () => {}) {
     try {
       await assertions();
     } catch (error) {
