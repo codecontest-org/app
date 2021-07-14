@@ -67,7 +67,7 @@ async function parents0003() {
   const about = 'Test delete permissions for the parents collection.';
   const test = new UnitTestHelper(3, about, suite);
   const { admin, user0, user1, anonymous } = test.createUsers({ user1: true });
-  const data = { fName: 'Dante', lName: 'Dunn' };
+  const data = suite.randomData();
 
   await suite.getDoc(admin, test.user(0)).set(data);
   await suite.getDoc(admin, test.doc(0)).set(data);
