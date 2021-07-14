@@ -9,10 +9,13 @@
  *  - https://firebase.google.com/docs/firestore/security/test-rules-emulator
  */
 
+require('dotenv').config();
+
 const admins = require('./admins');
 const parents = require('./parents');
+const teachers = require('./teachers');
 
-const testSuites = { admins, parents };
+const testSuites = { admins, parents, teachers };
 
 async function runAllTests() {
   console.log('[*] Running Firestore Rules Tests...\n');

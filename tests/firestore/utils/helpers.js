@@ -1,13 +1,15 @@
 const { testId, docId, userId } = require('./ids');
 const { createAdminApp, createUserApp, User, cleanup } = require('./users');
 
-const env = 'PRODUCTION';
+const secret = process.env.ADMIN_SECRET;
 
 class TestSuiteHelper {
-  constructor(name, dataMembers) {
+  constructor(name, dataMembers, env = 'PRODUCTION') {
+    this.env = env;
     this.name = name;
     this.email = `${name}@test.app`;
     this.members = dataMembers;
+    this.secret = secret;
   }
 
   randomData() {
@@ -28,9 +30,17 @@ class TestSuiteHelper {
     return user
       .firestore()
       .collection('env')
-      .doc(env)
+      .doc(this.env)
       .collection(this.name)
       .doc(documentId);
+  }
+
+  getCol(user, colName) {
+    return user
+      .firestore()
+      .collection('env')
+      .doc(this.env)
+      .collection(colName);
   }
 }
 
