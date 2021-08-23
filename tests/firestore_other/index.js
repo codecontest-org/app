@@ -4,6 +4,8 @@ const firebase = require('firebase/app');
 require('firebase/firestore');
 require('firebase/auth');
 
+const admins = require('./tests/admins');
+
 function setupFirebase() {
   const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -32,6 +34,7 @@ function setupFirebase() {
 function AuthHandler(auth) {
   this.parent = () => auth.signInWithEmailAndPassword('parent@macuyl.er', '12345678');
   this.teacher = () => auth.signInWithEmailAndPassword('teacher@macuyl.er', '12345678');
+  this.admin = () => auth.signInWithEmailAndPassword('admin@macuyl.er', '12345678');
   this.none = auth.signOut;
   this.id = () => auth.currentUser?.uid;
 }
@@ -81,6 +84,7 @@ async function test0002(db, auth) {
 async function main() {
   const { db, auth } = setupFirebase();
   const useAuth = new AuthHandler(auth);
+  await admins.admins0000(db, useAuth);
   await test0001(db, useAuth);
   await test0002(db, useAuth);
   console.log('\n\n\nAll Done!\n\n');
