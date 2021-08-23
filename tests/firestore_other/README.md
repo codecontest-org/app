@@ -7,8 +7,8 @@ We do this using the standard node.js firebase SDK running off local firebase si
 ## Tesing Methodology
 
 These tests are designed to be a logical definition of the firestore rules defined for the parent project.
-As such, they are responsible for verifying CRUD functionality of data in each defined collection.
-Each collection should be broken up into at least four tests. One for each function of CRUD.
+As such, they are responsible for verifying _CRUD_ functionality of data in each defined collection.
+Each collection should be broken up into at least four tests. One for each function of _CRUD_.
 The individual tests should verify that permitted users can complete the relevant task.
 They should also verify that an array of unpermitted users cannot complete the relevant task.
 This will be done by setting up a given task, and then attempting it with varying authentication states.
@@ -39,4 +39,4 @@ npm start
 
 > **Note:** Running the firebase emulators requires java to be installed.
 > The emulators also require you use node v12 specifically.
-> (Checkout [nvm](https://github.com/nvm-sh/nvm) for having multiple version of node on your computer!)
+> (Checkout [nvm](https://github.com/nvm-sh/nvm)!)
