@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const { Child, Class, Parent, Reference, Teacher, Team, TeamInvite } = require('./mockData');
+const { Child, Class, Parent, Reference, Admin, Teacher, Team, TeamInvite } = require('./mockData');
 
 // Initialize app.
 admin.initializeApp();
@@ -11,19 +11,34 @@ admin.initializeApp();
 function loadMockData() {
   const PARENT_ID = 'YfUPMIK3oncdLqYpFjmgvKpcGnj2';
   const TEACHER_ID = 'L9FHk2QrVfeQWBvgCFbwjXtCkfz1';
+  const ADMIN_ID = 'n9zoEDIiSDZl4aVJvDiWr2xjkqC2';
+
   // Parents Collection.
-  const parents = [new Parent('Abe', 'Ableton'), new Parent('Bruce', 'Brucerton')];
+  const parents = [
+    new Parent('Abe', 'Ableton'),
+    new Parent('Bruce', 'Brucerton'),
+    new Parent('Chris', 'Christianson')
+  ];
+
   // Set userIds for existing accounts.
   parents[0].setId(PARENT_ID); //   parent@macuyl.er userId
-  parents[1].setId(TEACHER_ID); // teacher@macuyl.er userId
+  parents[1].setId(TEACHER_ID); //  teacher@macuyl.er userId
+  parents[2].setId(ADMIN_ID); //    admin@macuyl.er userId
+
+  // Admins Collection.
+  const admins = [new Admin('!_xEqyCw3Y.6*wrW32EkCz6GUUn7')];
+  admins[0].setId(ADMIN_ID);
+
   // Teachers Collection.
   const teachers = [new Teacher('123 Learning Road')];
   teachers[0].setId(TEACHER_ID);
+
   // Children Collection.
   const children = [
     new Child('Billy', 'Bob', new Reference({ parents }, 0)),
     new Child('Jimbo', 'Joe', new Reference({ parents }, 1))
   ];
+
   // Add Children to Parents.
   parents[0].addChild(new Reference({ children }, 0));
   parents[1].addChild(new Reference({ children }, 1));
@@ -33,14 +48,17 @@ function loadMockData() {
   // Add Children to Classes.
   classes[0].addChild(new Reference({ children }, 0));
   classes[0].addChild(new Reference({ children }, 1));
+
   // Add Classes to Children.
   children[0].addClass(new Reference({ classes }, 0));
   children[1].addClass(new Reference({ classes }, 0));
+
   // Add Classes to Teachers.
   teachers[0].addClass(new Reference({ classes }, 0));
 
   // Contest Teams Collection.
   const contestTeams = [new Team('Cool Team', new Reference({ classes }, 0))];
+
   // Set team owner and first member.
   contestTeams[0].setOwner(parents[0].id);
   contestTeams[0].addMember(new Reference({ children }, 0));
@@ -48,7 +66,7 @@ function loadMockData() {
   // Contest Invites Collection.
   const contestTeamInvites = [new TeamInvite(children[1], contestTeams[0])];
 
-  return { parents, children, classes, contestTeams, contestTeamInvites, teachers };
+  return { parents, children, classes, contestTeams, contestTeamInvites, admins, teachers };
 }
 
 /**

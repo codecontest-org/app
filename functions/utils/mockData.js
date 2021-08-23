@@ -106,6 +106,16 @@ class Parent extends Person {
 }
 
 /**
+ * A document in the admins collection.
+ */
+class Admin extends Doc {
+  constructor(secret) {
+    super();
+    this.secret = secret;
+  }
+}
+
+/**
  * A document in the teachers collection.
  */
 class Teacher extends Doc {
@@ -204,4 +214,4 @@ class TeamInvite extends Doc {
   }
 }
 
-module.exports = { Reference, Child, Parent, Teacher, Class, Team, TeamInvite };
+module.exports = { Reference, Child, Parent, Admin, Teacher, Class, Team, TeamInvite };
