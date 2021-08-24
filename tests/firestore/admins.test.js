@@ -1,3 +1,11 @@
+/**
+ * Full test coverage for the firestore rules of the admins collection.
+ *
+ * All tests are run against admin, parent, and anonymous users.
+ * Parents are considered non-admin users, so it would be
+ * redundant to test against teachers as well.
+ */
+
 const { useFirebase } = require('../utils/firebase');
 const { attempt } = require('../utils/helpers');
 
@@ -13,11 +21,7 @@ test('All users can NOT read any admin documents.', async () => {
   await auth.admin();
   const adminDoc = doc();
 
-  /**
-   * Test against admins, parents, and anonymous.
-   * Parents are considered non-admin users, so it
-   * would be redundant to test against teachers.
-   */
+  // Assertions.
   await auth.admin();
   await attempt(adminDoc.get(), r => expect(r).toBe(false));
 
@@ -33,11 +37,7 @@ test('All users can NOT create an admin document.', async () => {
 
   const data = { secret: 'SUPER_SECRET' };
 
-  /**
-   * Test against admins, parents, and anonymous.
-   * Parents are considered non-admin users, so it
-   * would be redundant to test against teachers.
-   */
+  // Assertions.
   await auth.admin();
   await attempt(doc().set(data), r => expect(r).toBe(false));
 
@@ -56,11 +56,7 @@ test('All users can NOT update any admin documents.', async () => {
   const adminDoc = doc();
   const data = { secret: 'SUPER_SECRET' };
 
-  /**
-   * Test against admins, parents, and anonymous.
-   * Parents are considered non-admin users, so it
-   * would be redundant to test against teachers.
-   */
+  // Assertions.
   await auth.admin();
   await attempt(adminDoc.update(data), r => expect(r).toBe(false));
 
@@ -78,11 +74,7 @@ test('All users can NOT delete any admin documents.', async () => {
   await auth.admin();
   const adminDoc = doc();
 
-  /**
-   * Test against admins, parents, and anonymous.
-   * Parents are considered non-admin users, so it
-   * would be redundant to test against teachers.
-   */
+  // Assertions.
   await auth.admin();
   await attempt(adminDoc.delete(), r => expect(r).toBe(false));
 
