@@ -1,11 +1,10 @@
 const { useFirebase } = require('../utils/firebase');
-const { attempt, results } = require('../utils/helpers');
+const { attempt } = require('../utils/helpers');
 
 const { db, auth } = useFirebase();
 
 // Local helpers.
 const doc = id => db.collection('admins').doc(id || auth.id());
-const shouldFail = results(expect, false);
 
 test('All users can NOT read any admin documents.', async () => {
   expect.assertions(3);
@@ -20,13 +19,13 @@ test('All users can NOT read any admin documents.', async () => {
    * would be redundant to test against teachers.
    */
   await auth.admin();
-  await attempt(adminDoc.get(), shouldFail);
+  await attempt(adminDoc.get(), r => expect(r).toBe(false));
 
   await auth.parent();
-  await attempt(adminDoc.get(), shouldFail);
+  await attempt(adminDoc.get(), r => expect(r).toBe(false));
 
   await auth.none();
-  await attempt(adminDoc.get(), shouldFail);
+  await attempt(adminDoc.get(), r => expect(r).toBe(false));
 });
 
 test('All users can NOT create an admin document.', async () => {
@@ -40,11 +39,11 @@ test('All users can NOT create an admin document.', async () => {
    * would be redundant to test against teachers.
    */
   await auth.admin();
-  await attempt(doc().set(data), shouldFail);
+  await attempt(doc().set(data), r => expect(r).toBe(false));
 
   await auth.parent();
-  await attempt(doc().set(data), shouldFail);
+  await attempt(doc().set(data), r => expect(r).toBe(true));
 
   await auth.none();
-  await attempt(doc().set(data), shouldFail);
+  await attempt(doc().set(data), r => expect(r).toBe(false));
 });
