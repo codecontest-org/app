@@ -1,32 +1,32 @@
 const { useFirebase } = require('../utils/firebase');
-const { attempt } = require('../utils/helpers');
+const { attempt, results } = require('../utils/helpers');
 
 const { db, auth } = useFirebase();
-let adminDoc = null;
 
-/**
- * Setup a valid admin doc for testing.
- */
-beforeAll(async () => {
+// Local helpers.
+const doc = id => db.collection('admins').doc(id);
+
+test('All users can NOT read any admin documents.', async () => {
+  expect.assertions(3);
+
+  // Setup test document.
   await auth.admin();
-  const adminId = auth.id();
-  adminDoc = db.collection('admins').doc(adminId);
-});
+  const adminDoc = doc(auth.id());
 
-test('Admin users can NOT read their own admin document.', async () => {
-  expect.assertions(1);
+  // Setup results handler.
+  const shouldFail = results(expect, false);
+
+  /**
+   * Test against admins, parents, and anonymous.
+   * Parents are considered non-admin users, so it
+   * would be redundant to test against teachers.
+   */
   await auth.admin();
-  await attempt(adminDoc.get(), success => expect(success).toBe(false));
-});
+  await attempt(adminDoc.get(), shouldFail);
 
-test('Non-admin users can NOT read any admin documents.', async () => {
-  expect.assertions(1);
   await auth.parent();
-  await attempt(adminDoc.get(), success => expect(success).toBe(false));
-});
+  await attempt(adminDoc.get(), shouldFail);
 
-test('Unauthenticated users can NOT read any admin documents.', async () => {
-  expect.assertions(1);
   await auth.none();
-  await attempt(adminDoc.get(), success => expect(success).toBe(false));
+  await attempt(adminDoc.get(), shouldFail);
 });

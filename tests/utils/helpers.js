@@ -11,4 +11,6 @@ const attempt = (action, callback) =>
       } else throw error;
     });
 
-module.exports = { attempt, denied };
+const results = (exp, bool) => success => exp(success).toBe(bool);
+
+module.exports = { attempt, denied, results };
