@@ -4,9 +4,9 @@ This project attempts to create a reliable way to test the `firestore.rules` of 
 
 We do this using the standard node.js firebase SDK running off local firebase simulators.
 
-## Tesing Methodology
+## Testing Methodology
 
-These tests are designed to be a logical definition of the firestore rules defined for the parent project.
+These tests are designed to be a logical definition of the firestore rules for the parent project.
 As such, they are responsible for verifying _CRUD_ functionality of data in each defined collection.
 Each collection should be broken up into at least four tests. One for each function of _CRUD_.
 The individual tests should verify that permitted users can complete the relevant task.
@@ -29,14 +29,11 @@ To remedy this, you can define new data inside our cloud function's [loadMockDat
 
 ```
 # Session 0
-cd app
 npm run firebase
 
 # Session 1
-cd app/tests/firestore_other
-npm start
+npm run test
 ```
 
 > **Note:** Running the firebase emulators requires java to be installed.
 > The emulators also require you use node v12 specifically.
-> (Checkout [nvm](https://github.com/nvm-sh/nvm)!)
