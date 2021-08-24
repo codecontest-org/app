@@ -1,20 +1,32 @@
 const { useFirebase } = require('../utils/firebase');
 const { attempt } = require('../utils/helpers');
-// const { PERMISSION_DENIED } = require('../utils/globals');
 
 const { db, auth } = useFirebase();
+let adminDoc = null;
 
-function sum(a, b) {
-  return a + b;
-}
-
-test('adds 1 + 1 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
+/**
+ * Setup a valid admin doc for testing.
+ */
+beforeAll(async () => {
+  await auth.admin();
+  const adminId = auth.id();
+  adminDoc = db.collection('admins').doc(adminId);
 });
 
-test('Verify read permissions for the admins collection', async () => {
+test('Admin users can NOT read their own admin document.', async () => {
   expect.assertions(1);
   await auth.admin();
-  const adminDoc = db.collection('admins').doc(auth.id());
+  await attempt(adminDoc.get(), success => expect(success).toBe(false));
+});
+
+test('Non-admin users can NOT read any admin documents.', async () => {
+  expect.assertions(1);
+  await auth.parent();
+  await attempt(adminDoc.get(), success => expect(success).toBe(false));
+});
+
+test('Unauthenticated users can NOT read any admin documents.', async () => {
+  expect.assertions(1);
+  await auth.none();
   await attempt(adminDoc.get(), success => expect(success).toBe(false));
 });

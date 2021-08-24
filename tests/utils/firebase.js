@@ -40,7 +40,7 @@ function AuthHandler(auth) {
   this.parent = () => auth.signInWithEmailAndPassword('parent@macuyl.er', '12345678');
   this.teacher = () => auth.signInWithEmailAndPassword('teacher@macuyl.er', '12345678');
   this.admin = () => auth.signInWithEmailAndPassword('admin@macuyl.er', '12345678');
-  this.none = auth.signOut;
+  this.none = () => auth.signOut();
   this.id = () => auth.currentUser?.uid;
 }
 
