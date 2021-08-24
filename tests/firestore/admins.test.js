@@ -42,7 +42,7 @@ test('All users can NOT create an admin document.', async () => {
   await attempt(doc().set(data), r => expect(r).toBe(false));
 
   await auth.parent();
-  await attempt(doc().set(data), r => expect(r).toBe(true));
+  await attempt(doc().set(data), r => expect(r).toBe(false));
 
   await auth.none();
   await attempt(doc().set(data), r => expect(r).toBe(false));
