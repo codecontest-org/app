@@ -4,8 +4,9 @@ const firebase = require('firebase/app');
 require('firebase/firestore');
 require('firebase/auth');
 
-const admins = require('./tests/admins');
-
+/**
+ * Setup a firebase app running on local emulators.
+ */
 function setupFirebase() {
   const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -31,6 +32,10 @@ function setupFirebase() {
   return { db, auth };
 }
 
+/**
+ * A firebase auth wrapper.
+ * Allows quick auth context switching.
+ */
 function AuthHandler(auth) {
   this.parent = () => auth.signInWithEmailAndPassword('parent@macuyl.er', '12345678');
   this.teacher = () => auth.signInWithEmailAndPassword('teacher@macuyl.er', '12345678');
@@ -40,54 +45,12 @@ function AuthHandler(auth) {
 }
 
 /**
- * Attempt quitter creation.
+ * Helper function for utilizing firebase utilities.
  */
-async function test0001(db, auth) {
-  await auth.parent();
-  const parentDoc = await db
-    .collection('parents')
-    .doc(auth.id())
-    .get();
-  const { children } = parentDoc.data();
-  const quitData = { childRef: children[0] };
-  try {
-    await db
-      .collection('contestTeamQuitters')
-      .doc()
-      .set(quitData);
-  } catch (error) {
-    console.log('OOpps...');
-    console.log(error);
-  }
-}
-
-/**
- * Attempt class name update.
- */
-async function test0002(db, auth) {
-  await auth.teacher();
-  const teacherDoc = await db
-    .collection('teachers')
-    .doc(auth.id())
-    .get();
-  const { classes } = teacherDoc.data();
-  console.log('My classes:', classes);
-  console.log('My class:', classes[0].id);
-  try {
-    await classes[0].update({ name: 'so H@cked!!' });
-  } catch (error) {
-    console.log('No good...');
-    console.log(error);
-  }
-}
-
-async function main() {
+function useFirebase() {
   const { db, auth } = setupFirebase();
   const useAuth = new AuthHandler(auth);
-  await admins.admins0000(db, useAuth);
-  await test0001(db, useAuth);
-  await test0002(db, useAuth);
-  console.log('\n\n\nAll Done!\n\n');
+  return { db, auth: useAuth };
 }
 
-main();
+module.exports = { useFirebase, setupFirebase, AuthHandler };
