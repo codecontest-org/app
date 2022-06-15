@@ -29,7 +29,7 @@ export const breakpoints = {
   values: bpValues,
   ...getSizes()
 };
-export const paletteType = 'light';
+export const paletteType = 'dark';
 
 export const months = [
   'January',
@@ -47,9 +47,7 @@ export const months = [
 ];
 
 export const programTypeToText = {
-  camp: 'Camp',
-  'after-school': 'After School Program',
-  'special-event': 'Special Event'
+  contest: 'Code Contest'
 };
 
 export const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -68,6 +66,32 @@ export const STATUS = {
   DECLINED: 'DECLINED',
   PENDING: 'PENDING'
 };
+
+/**
+ * Games Globals
+ */
+export const gameTypes = {
+  '': '',
+  default: 'Default Template',
+  runner: 'Run Game',
+  soccer: 'Soccer Game',
+  zombie: 'Zombie Game'
+};
+
+export const gameNames = /^[a-z]+$/;
+
+export const gamesPerKid = 1;
+
+export const serverReqs = ['RESTART', 'STOP'];
+
+export const GREEN = '#22AE0C';
+
+export const defaultStatus = {
+  download: 0,
+  build: 0
+};
+
+export const gameNameBlackList = ['www'];
 
 /**
  * Global Data Memeber Validation.

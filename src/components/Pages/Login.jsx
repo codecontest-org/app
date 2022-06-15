@@ -189,7 +189,7 @@ class Login extends React.Component {
                   </DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                      {`We have sent an email to ${this.state.email} containing a link that will allow you to reset your password. After clicking the link you will be taken to a page that will prompt you to enter a password. Once submitted the password entered will allow you to login to your account on CodeChangers!`}
+                      {`We have sent an email to ${this.state.email} containing a link that will allow you to reset your password. After clicking the link you will be taken to a page that will prompt you to enter a password. Once submitted the password entered will allow you to login to your account on Code Contest!`}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>

@@ -30,7 +30,7 @@ const ClassSearchInterface = ({ useCustomAppBar, classes, location, user, accoun
   const [isLoading, setIsLoading] = useState(true);
 
   // Customize App Bar
-  useEffect(() => useCustomAppBar({ title: 'Register for a CodeChangers event' }), [classList]);
+  useEffect(() => useCustomAppBar({ title: 'Register for a Code Contest' }), [classList]);
 
   useEffect(() => {
     let { pathname } = location;
@@ -101,12 +101,12 @@ const ClassSearchInterface = ({ useCustomAppBar, classes, location, user, accoun
             0 &&
           (searchId ? (
             <Typography variant="h6" className={classes.empty}>
-              There is no class available with the id: {searchId} <br /> Make sure you typed the id
-              in correctly, and that the class is still active.
+              There is no contest available with the id: {searchId} <br /> Make sure you typed the
+              id in correctly, and that the class is still active.
             </Typography>
           ) : (
             <Typography variant="h6" className={classes.empty}>
-              No Classes Available right now.... <br /> Check back later, new classes are added all
+              No Contests Available right now.... <br /> Check back later, new classes are added all
               the time!
             </Typography>
           ))}

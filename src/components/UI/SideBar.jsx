@@ -14,7 +14,11 @@ import {
   AccountTree,
   SupervisorAccount,
   School,
-  Assignment
+  Description,
+  MenuBook,
+  VideogameAsset,
+  Assignment,
+  DoneAll
 } from '@material-ui/icons';
 import { AppBar, Toolbar, Typography, makeStyles, IconButton, Collapse } from '@material-ui/core';
 import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
@@ -49,7 +53,7 @@ const defaultProps = {
   enableIntercom: false,
   whoAmI: null,
   appBarConfig: {
-    title: 'CodeChangers',
+    title: 'Code Contest',
     content: null,
     action: null,
     clsname: '',
@@ -62,17 +66,21 @@ const defaultABC = defaultProps.appBarConfig;
 const nameToIcon = {
   Dashboard,
   Curriculum: ImportContacts,
-  Events: Event,
+  Contests: Event,
   Payments: AttachMoney,
   Profile: AccountCircle,
   'Sign up': Edit,
   Register: Search,
   'Promo Codes': CardGiftcard,
   Settings,
+  Docs: Description,
+  Tutorials: MenuBook,
+  'Pre Contest': Assignment,
+  Games: VideogameAsset,
+  Submit: DoneAll,
   'Parent Dash': AccountTree,
   'Teacher Dash': School,
-  'Admin Dash': SupervisorAccount,
-  'Student IDs': Assignment
+  'Admin Dash': SupervisorAccount
 };
 
 const SideBar = ({ names, baseRoute, enableIntercom, whoAmI, location, width, appBarConfig }) => {
@@ -88,7 +96,7 @@ const SideBar = ({ names, baseRoute, enableIntercom, whoAmI, location, width, ap
 
   const nameToRoute = {
     Dashboard: baseRoute,
-    Events: baseRoute,
+    Contests: baseRoute,
     Curriculum: `${baseRoute}/curriculum`,
     Payments: `${baseRoute}/payments`,
     Profile: `${baseRoute}/profile`,
@@ -96,10 +104,14 @@ const SideBar = ({ names, baseRoute, enableIntercom, whoAmI, location, width, ap
     Register: `${baseRoute}/search`,
     'Promo Codes': `${baseRoute}/promo`,
     Settings: `${baseRoute}/settings`,
+    Docs: `${baseRoute}/docs`,
+    Tutorials: `${baseRoute}/tutorials`,
+    'Pre Contest': `${baseRoute}/preflight`,
+    Games: `${baseRoute}/games`,
+    Submit: `${baseRoute}/submit`,
     'Parent Dash': '/parent',
     'Teacher Dash': '/teacher',
-    'Admin Dash': '/admin',
-    'Student IDs': '/admin/ids'
+    'Admin Dash': '/admin'
   };
 
   const isSelected = (n, l) => {

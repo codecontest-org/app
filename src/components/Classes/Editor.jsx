@@ -62,7 +62,7 @@ class ClassEditor extends React.Component {
     super(props);
     this.state = {
       name: '',
-      programType: 'camp',
+      programType: 'contest',
       description: '',
       locationName: '',
       locationAddress: '',

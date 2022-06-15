@@ -23,10 +23,12 @@ const propTypes = {
   width: PropTypes.string.isRequired,
   whoAmI: PropTypes.object.isRequired,
   setWhoAmI: PropTypes.func.isRequired,
-  useCustomAppBar: PropTypes.func.isRequired
+  useCustomAppBar: PropTypes.func.isRequired,
+  useSelectedCls: PropTypes.func.isRequired
 };
 
-const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar }) => {
+const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar, useSelectedCls }) => {
+  const [setSelectedCls] = useSelectedCls().slice(1);
   const childRef = useMemo(() => whoAmI.ref, [whoAmI]);
   const child = useLiveChild(childRef);
   const classRefs = useMemo(() => child?.classes || [], [child]);
@@ -72,7 +74,7 @@ const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar }) => {
       );
     }
     useCustomAppBar({
-      title: `${whoAmI.fName}'s Events`,
+      title: `${whoAmI.fName}'s Contests`,
       wrap: true,
       content: <WhoAmIButton whoAmI={whoAmI} setWhoAmI={setWhoAmI} />,
       wrappedContent: (
@@ -83,6 +85,27 @@ const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar }) => {
       action
     });
   }, [whoAmI, child, showHistory, width]);
+
+  // TODO: Use timeouts to update without refresh.
+  const whenIs = cls => {
+    const now = new Date(Date.now());
+    const endsAt = getExactDateTime(cls.endDate, cls.endTime);
+    const startsAt = getExactDateTime(cls.startDate, cls.startTime);
+    const hasEnded = endsAt <= now;
+    const hasStarted = startsAt <= now;
+    return [hasStarted, hasEnded];
+  };
+
+  const isActive = cls => {
+    const [hasStarted, hasEnded] = whenIs(cls);
+    return hasStarted && !hasEnded;
+  };
+
+  const timePrompt = cls => {
+    if (isActive(cls)) return 'Start';
+    if (whenIs(cls)[1]) return 'Terminated';
+    return 'Upcoming';
+  };
 
   const filteredClasses = useMemo(
     () =>
@@ -97,7 +120,7 @@ const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar }) => {
       {filteredClasses.length === 0 && (
         <>
           <Typography variant="h4" className={classes.empty}>
-            You aren&apos;t registered for any events!
+            You aren&apos;t registered for any contests!
           </Typography>
           <Button
             variant="contained"
@@ -114,7 +137,17 @@ const ClassViewInterface = ({ width, whoAmI, setWhoAmI, useCustomAppBar }) => {
         .map(cls => (
           <Paper key={cls.id} className={classes.paper}>
             <InfoCardHeader cls={cls}>
-              <div />
+              <Button
+                disabled={!isActive(cls)}
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setSelectedCls(cls);
+                  history.push('/parent/tutorials');
+                }}
+              >
+                {timePrompt(cls)}
+              </Button>
             </InfoCardHeader>
           </Paper>
         ))}

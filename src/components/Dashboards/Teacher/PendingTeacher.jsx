@@ -10,7 +10,7 @@ const PendingTeacher = ({ accounts }) => (
       }`}
     </Typography>
     <Typography variant="body1" style={{ marginTop: 18 }}>
-      Welcome to the CodeChangers Go Platform! You will be able to oversee scheduling, payments, and
+      Welcome to the Code Contest Platform! You will be able to oversee scheduling, payments, and
       administrative information from this website. We are currently reviewing your application, and
       once approved, you will have full access to all this platform has to offer!
     </Typography>

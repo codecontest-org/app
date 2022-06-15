@@ -1,18 +1,18 @@
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Paper, IconButton, Button, Tooltip, makeStyles } from '@material-ui/core';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import DownloadIcon from '@material-ui/icons/CloudDownload';
 import LinkIcon from '@material-ui/icons/Link';
+import VerifiedIcon from '@material-ui/icons/CheckCircle';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { URL } from '../../utils/globals';
 import InfoCardHeader from './InfoCardHeader';
 import StudentInfo from './StudentInfo';
-import CSVDownload from '../UI/CSVDownload';
 import { useChildren } from '../../hooks/children';
-import { URL } from '../../utils/globals';
+import CheckOffModal from './CheckOff/Modal';
 
 const propTypes = {
   cls: PropTypes.object.isRequired,
@@ -23,17 +23,8 @@ const propTypes = {
 };
 
 const ClassInfoCard = ({ cls, openUpdate, openDelete, openContacts, width }) => {
+  const [showCheckOff, setShowCheckOff] = useState(false);
   const [students] = useChildren(cls.children);
-  const studentLogins = useMemo(
-    () =>
-      students.map(s => ({
-        first_name: s.fName,
-        last_name: s.lName,
-        username: s.learnID || `user${Math.floor(Math.random() * 2000)}`,
-        password: '12345678'
-      })),
-    [students]
-  );
 
   const classes = useStyles();
   const small = isWidthUp(width, 'sm');
@@ -50,14 +41,13 @@ const ClassInfoCard = ({ cls, openUpdate, openDelete, openContacts, width }) => 
             small={small}
           />
         </CopyToClipboard>
-        <CSVDownload filename={`${cls.name}-logins.csv`} data={studentLogins}>
-          <Option
-            icon={<DownloadIcon />}
-            text="Download Logins"
-            label="download-logins"
-            small={small}
-          />
-        </CSVDownload>
+        <Option
+          onClick={() => setShowCheckOff(true)}
+          icon={<VerifiedIcon />}
+          text="Check Offs"
+          label="check-off-progress"
+          small={small}
+        />
         <Option
           onClick={openContacts}
           icon={<ContactsIcon />}
@@ -80,6 +70,7 @@ const ClassInfoCard = ({ cls, openUpdate, openDelete, openContacts, width }) => 
           small={small}
         />
       </div>
+      <CheckOffModal open={showCheckOff} onClose={() => setShowCheckOff(false)} cls={cls} />
       <div className={classes.studWrapper}>
         <div className={classes.students}>
           <StudentInfo showLabels />

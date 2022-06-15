@@ -5,6 +5,9 @@ import { Redirect } from 'react-router-dom';
 import { PageWrapper } from '../styles';
 import ProfileInterface from '../../Interfaces/Profile';
 import PromoCodesInterface from '../../Interfaces/PromoCodes';
+import DocumentationInterface from '../../Interfaces/Documentation';
+import TutorialsInterface from '../../Interfaces/Tutorials';
+import PreFlightTutorialsInterface from '../../Interfaces/PreFlightTutorials';
 import SideBar from '../../UI/SideBar';
 import ApprovedTeacher from './ApprovedTeacher';
 import DeclinedTeacher from './DeclinedTeacher';
@@ -21,7 +24,10 @@ const propTypes = {
 const routeToInterface = {
   '/teacher': null,
   '/teacher/profile': ProfileInterface,
-  '/teacher/promo': PromoCodesInterface
+  '/teacher/promo': PromoCodesInterface,
+  '/teacher/docs': DocumentationInterface,
+  '/teacher/tutorials': TutorialsInterface,
+  '/teacher/preflight': PreFlightTutorialsInterface
 };
 
 const TeacherDashboard = props => {
@@ -53,7 +59,7 @@ const TeacherDashboard = props => {
 
   let approvedRoutes =
     isTeacher && teacher.isVerrified && !teacher.isTraining
-      ? ['Promo Codes', 'Parent Dash']
+      ? ['Promo Codes', 'Docs', 'Tutorials', 'Pre Contest', 'Parent Dash']
       : ['Parent Dash'];
   approvedRoutes = isAdmin ? approvedRoutes.concat(['Admin Dash']) : approvedRoutes;
 

@@ -71,7 +71,7 @@ const StripeHandler = ({ user, location }) => {
       }}
     >
       <Typography variant="h5">
-        {error || 'Linking Stripe to your CodeChangers Account...'}
+        {error || 'Linking Stripe to your Code Contest Account...'}
       </Typography>
       {loading && <CircularProgress color="secondary" style={{ marginTop: 30 }} />}
       {error && (
