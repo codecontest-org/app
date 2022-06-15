@@ -29,15 +29,3 @@ exports.retryStripeSellerAccount = functions.firestore
 exports.deleteStripeSellerAccount = functions.firestore
     .document("/env/{env}/stripeSellers/{sellerId}")
     .onDelete(stripe.sellers.disconnect);
-
-/* ====================
- * == Learn Accounts ==
- * ==================== */
-
-exports.assignLearnAccountId = functions.firestore
-    .document("/env/{env}/children/{childId}")
-    .onCreate(learn.assignAccountId);
-
-exports.generateLearnIds = functions.firestore
-    .document("/env/{env}/learnIdTickets/{ticketId}")
-    .onCreate(learn.generateIds);
