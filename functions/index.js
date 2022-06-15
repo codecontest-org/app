@@ -1,6 +1,5 @@
 const functions = require("firebase-functions");
 const stripe = require("./stripe");
-const learn = require("./learn");
 
 /* =====================
  * == Stripe Payments ==
